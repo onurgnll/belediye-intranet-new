@@ -1,0 +1,21 @@
+.eachanket {
+    cursor: pointer;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.eachanket:hover {
+    cursor: pointer;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+
+.aaaff {
+
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+    border-radius: 15px;
+    cursor: pointer
+}
+
+.aaaff:hover {
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}

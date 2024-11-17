@@ -1,0 +1,48 @@
+.buttonmainpage{
+    width: 100%;
+    border: none;
+    background-color: white;
+    padding: 10px;
+    border-radius: 15px;
+    margin-top: 1rem;
+    font-weight: bold;
+    display: flex;
+    justify-content:start;
+    align-items: center;
+    color: black;
+    text-decoration: none;
+    
+}
+.buttonmainpage span{
+    
+}
+.buttonmainpage:hover{
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+.iconmainpagebutton{
+    
+    background-color: #EE8641;
+    color: white;
+    padding: 5px;
+    border-radius: 15px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+
+}
+.iconmainpagebutton33{
+    
+    background-color: rgb(214, 74, 74);
+    color: white;
+    padding: 5px;
+    border-radius: 15px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+
+}
+.w-60{
+    width: 70%;
+}
+
+*{
+    font-family: "Roboto", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+}

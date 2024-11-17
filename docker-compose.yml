@@ -1,0 +1,40 @@
+services:
+  mysqldb:
+    image: mysql:8.0 
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: intranetkullanilacak2 
+      #MYSQL_USER: root
+      # MYSQL_PASSWORD: 123456 
+    ports:
+      - "3306:3306" 
+    volumes:
+      - dbdata:/var/lib/mysql 
+  app:
+    restart: always
+    build: ./backend
+    depends_on:
+      - mysqldb
+    ports:
+      - "5000:5000"
+    volumes:
+      - media:/app/media
+  frontend:
+    restart: always
+    build: ./frontend
+    depends_on:
+      - app
+    ports:
+      - "7173:4173"
+  admin:
+    restart: always
+    build: ./admin-frontend
+    depends_on:
+      - app
+    ports:
+      - "5173:4173"
+
+volumes:
+  dbdata:
+  media:

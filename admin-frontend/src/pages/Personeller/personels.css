@@ -1,0 +1,79 @@
+.table-container {
+    width: 100%;
+    margin: auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.custom-table5 {
+    width: 100%;
+    border-collapse: collapse;
+}
+.custom-table5 th {
+    border: 1px solid #ddd;
+    padding: 6px;
+}
+
+.custom-table5 td {
+    /* border: 1px solid #ddd; */
+    padding: 4px;
+}
+.custom-table5 th {
+    background-color: #f4f4f4;
+}
+.custom-table5 img {
+    max-width: 200px; /* Resim boyutunu sınırlandırmak için */
+    border-radius: 4px;
+}
+.custom-table5 tbody tr:nth-child(even) {
+    background-color: #f4f4f4;
+}
+.custom-table5 tbody tr:hover {
+    color: white;
+    cursor: pointer;
+    background-color: #c6c6c6;
+}
+
+.olusturbutton{
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    color: white;
+    font-weight: bold;
+    background-color: rgb(42, 42, 91);
+    padding: 5px;
+    border-radius: 10px;
+}
+
+
+.pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.page-item {
+    margin: 0 4px;
+}
+
+.page-link {
+    padding: 4px 8px;
+    cursor: pointer;
+    background-color: #F9C417;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+
+}
+
+.page-link:hover {
+    color: white;
+    background-color: #b29023;
+}
+
+.active .page-link {
+    background-color: #94781e;
+    color: white;
+}

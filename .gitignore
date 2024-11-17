@@ -1,0 +1,7 @@
+./backend/public
+
+public
+/public
+backend/public/*
+
+backend/public/
