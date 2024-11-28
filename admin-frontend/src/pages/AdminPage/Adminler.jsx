@@ -17,6 +17,7 @@ function Adminler() {
     const updateAdmin = async (admin) => {
         const updatedAdmin = {
             user_id: admin.user_id,
+            password: admin.password, // Şifre güncellemesini backend'e gönder
             allowDuyuru: admin.allowDuyuru,
             allowPhones: admin.allowPhones,
             allowIPS: admin.allowIPS,
@@ -26,16 +27,13 @@ function Adminler() {
             allowAdmins: admin.allowAdmins,
         };
 
-        // Backend'e güncelleme isteği gönder
         const response = await requestWithAuth("post", "/admin/update-admin", "", "", updatedAdmin);
 
         if (response.success == 1) {
-            successToast("Admin Başarıyla Güncellendi.")
-            getAdmin()
+            successToast("Admin Başarıyla Güncellendi.");
+            getAdmin();
         } else {
-            errorToast(
-                "Admin güncellenirken bir hata oluştu."
-            )
+            errorToast("Admin güncellenirken bir hata oluştu.");
         }
     };
 
@@ -45,13 +43,18 @@ function Adminler() {
         setAdmins(updatedAdmins);
     };
 
+    const handlePasswordChange = (adminIndex, newPassword) => {
+        const updatedAdmins = [...admins];
+        updatedAdmins[adminIndex].password = newPassword; // Şifreyi güncelle
+        setAdmins(updatedAdmins);
+    };
+
     useEffect(() => {
         getAdmin();
     }, []);
 
-
     useEffect(() => {
-        getAdmin()
+        getAdmin();
     }, [search]);
 
     const [open, setOpen] = useState(false);
@@ -63,11 +66,11 @@ function Adminler() {
     const handleClose = () => {
         setOpen(false);
     };
+
     const deleteAdmin = async (userId) => {
+        const confirmm = confirm("Silmek İstiyor musunuz?");
 
-        const confirmm= confirm("Silmek İstiyor musunuz?")
-
-        if(!confirmm) return;
+        if (!confirmm) return;
 
         const response = await requestWithAuth("delete", `/admin/delete-admin/${userId}`);
 
@@ -78,14 +81,14 @@ function Adminler() {
             errorToast("Admin silinirken bir hata oluştu.");
         }
     };
+
     return (
         <div>
             <CreateAdmin getAdmin={getAdmin} open={open} handleClose={handleClose}></CreateAdmin>
             <div className="d-flex justify-content-between align-items-center">
                 <div className="d-flex">
-
                     <TextField
-                        className='mt-2 '
+                        className="mt-2"
                         id="title"
                         label="Kullanıcı Adı"
                         variant="outlined"
@@ -94,8 +97,9 @@ function Adminler() {
                     />
                 </div>
                 <div className="mt-2">
-
-                    <button onClick={handleClickOpen} className="olusturbutton px-5">Oluştur</button>
+                    <button onClick={handleClickOpen} className="olusturbutton px-5">
+                        Oluştur
+                    </button>
                 </div>
             </div>
             <hr />
@@ -104,6 +108,7 @@ function Adminler() {
                 <thead>
                     <tr>
                         <th>Kullanıcı Adı</th>
+                        <th>Şifre</th>
                         <th>Duyuru</th>
                         <th>Telefonlar</th>
                         <th>IP'ler</th>
@@ -120,6 +125,12 @@ function Adminler() {
                             return (
                                 <tr key={admin.user_id}>
                                     <td>{admin.username}</td>
+                                    <td>
+                                        <TextField
+                                            value={admin.password || ""}
+                                            onChange={(e) => handlePasswordChange(index, e.target.value)}
+                                        />
+                                    </td>
                                     <td>
                                         <Checkbox
                                             checked={admin.allowDuyuru === 1}

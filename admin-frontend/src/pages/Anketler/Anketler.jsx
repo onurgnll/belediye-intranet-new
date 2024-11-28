@@ -44,6 +44,8 @@ function Anketler() {
             const resp = await requestWithAuth("delete", "/admin/delete-anket/" + e)
 
             setSurveys(resp.data.surveys)
+            getSurveys()
+            getMainSurvey()
 
         } catch (error) {
             console.log(error);
@@ -69,7 +71,7 @@ function Anketler() {
 
     return (
         <div>
-            <CreateAnket open={open} handleClose={handleClose} getAnketler={getSurveys}></CreateAnket>
+            <CreateAnket open={open} handleClose={handleClose} getAnketler={getSurveys} getMainSurvey={getMainSurvey}></CreateAnket>
             <div>
 
                 <div className="mt-2">

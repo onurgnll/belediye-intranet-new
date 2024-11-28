@@ -1,6 +1,6 @@
 const { where, Sequelize, Op, QueryTypes } = require("sequelize");
 const CustomError = require("../errors/CustomError");
-const { User, Telephone, Personel,DestekCevap, Duyuru, DuyuruResim, sequelize, Destek, DestekResim,Survey } = require("../models");
+const { User, Telephone, Personel, DestekCevap, Duyuru, DuyuruResim,Client, sequelize, Destek, DestekResim, Survey } = require("../models");
 const Response = require("../responses/response");
 const { generateAccessToken } = require("../helpers/token");
 const login = async (req, res, next) => {
@@ -91,6 +91,9 @@ const getDuyuru = async (req, res, next) => {
     try {
 
         const duyurular = await Duyuru.findAll({
+            where: {
+                isActive: true
+            },
             include: {
                 model: DuyuruResim,
                 as: "duyuruResimler"
@@ -140,7 +143,8 @@ const getMainDuyuru = async (req, res, next) => {
     try {
         const duyuru = await Duyuru.findOne({
             where: {
-                isMain: true
+                isMain: true,
+                isActive: true
             },
             include: {
                 model: DuyuruResim,
@@ -165,7 +169,7 @@ const getMainAnket = async (req, res, next) => {
                 isMain: true
             },
         })
-        if(!anket) return res.status(200).json(new Response(-1, { }, "Main Anket Bulunamadı"));
+        if (!anket) return res.status(200).json(new Response(-1, {}, "Main Anket Bulunamadı"));
 
         res.status(200).json(new Response(1, { anket }, "success"));
 
@@ -176,11 +180,24 @@ const getMainAnket = async (req, res, next) => {
     }
 }
 
+
+
+const whoAmI = async (req, res) => {
+    let ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+    if (ip.startsWith("::ffff:")) {
+        ip = ip.replace("::ffff:", "");
+    }
+
+    const switchh = await Client.findOne({where: {ip: ip}})
+
+    res.json({ ip , switchh });
+};
 module.exports = {
     login,
     getDuyuru,
     getHasBirthdayPersons,
     getPhoneNumbers,
     getMainAnket,
-    getMainDuyuru
+    getMainDuyuru,
+    whoAmI
 }

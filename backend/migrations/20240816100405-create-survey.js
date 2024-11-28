@@ -12,6 +12,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
+      isActive: {
+        type: Sequelize.TINYINT,
+        defaultValue: 1
+      },
       description: {
         type: Sequelize.TEXT
       },

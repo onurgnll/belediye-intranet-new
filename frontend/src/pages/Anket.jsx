@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import Sidebar from '../components/Sidebar'; 
-import Header from '../components/Header'; 
-import './Anket.css'; 
+import Sidebar from '../components/Sidebar';
+import Header from '../components/Header';
+import './Anket.css';
 import { useNavigate } from 'react-router-dom';
 import icon1 from '../assets/icons/testing.png';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
@@ -67,28 +67,60 @@ const Anket = () => {
     }
   };
 
+  console.log(mainSurvey);
   return (
     <div className="anket-page">
       <Header />
       <div className="main-content">
         <Sidebar />
+        <div style={{borderBottom: "1px solid white"}} className="anket-container2">
+
+          {surveys.length > 0 &&
+            surveys.filter(a => a.isMain == 1).map((survey) => {
+              return (
+                <div key={survey.id} className="survey-box" onClick={() => handleSurveyClick(survey)}>
+                  <h2 className="survey-title">{survey.title}</h2>
+                  <img src={icon1} alt={survey.title} className="survey-image" />
+                </div>
+              )
+
+
+            })
+          }
+        </div>
         <div className="anket-container">
-          {mainSurvey && (
+          {/* {mainSurvey && (
             <div className="main-survey-box survey-box" onClick={() => handleSurveyClick(mainSurvey)}>
               <h2 className="survey-title">{mainSurvey.title}</h2>
               <img src={icon1} alt={mainSurvey.title} className="survey-image" />
             </div>
-          )}
-          {surveys.length > 0 ? (
+          )} */}
+
+          {/* {surveys.length > 0 ?
+            
             surveys.map((survey) => (
               <div key={survey.id} className="survey-box" onClick={() => handleSurveyClick(survey)}>
                 <h2 className="survey-title">{survey.title}</h2>
                 <img src={icon1} alt={survey.title} className="survey-image" />
               </div>
             ))
-          ) : (
-            <p>No surveys available.</p>
-          )}
+            : (
+              <p>Henüz Anket Yayınlanmamış.</p>
+            )} */}
+
+
+          {surveys.length > 0 &&
+            surveys.filter(a => a.isMain == 0).map((survey) => {
+              return (
+                <div key={survey.id} className="survey-box" onClick={() => handleSurveyClick(survey)}>
+                  <h2 className="survey-title">{survey.title}</h2>
+                  <img src={icon1} alt={survey.title} className="survey-image" />
+                </div>
+              )
+
+
+            })
+          }
         </div>
       </div>
 
@@ -100,9 +132,9 @@ const Anket = () => {
           <p>{selectedSurvey?.description}</p>
         </DialogContent>
         <DialogActions>
-        <Button onClick={handleSolveSurvey} className="dialog-button-solve" variant="outlined">Çöz</Button>
+          <Button onClick={handleSolveSurvey} className="dialog-button-solve" variant="outlined">Çöz</Button>
           <Button onClick={handleCloseDialog} className="dialog-button-close" variant="outlined">Kapat</Button>
-         
+
         </DialogActions>
       </Dialog>
     </div>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom'; 
+import { useLocation, useNavigate } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
@@ -8,7 +8,7 @@ import { Autocomplete, Chip } from '@mui/material';
 
 const AnketPage = () => {
   const loc = useLocation();
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const [anket, setAnket] = useState();
   const [answers, setAnswers] = useState([]);
   const [tags, setTags] = useState({}); // Store tags for each question separately
@@ -99,6 +99,12 @@ const AnketPage = () => {
     const surveyID = loc.pathname.split('/')[2];
     const user = "192.168.1.26";
 
+    if (localStorage.getItem("anketler") && localStorage.getItem("anketler").split(",").includes(surveyID)) {
+      alert("Bu anketi zaten cevaplamışsınız.")
+      return;
+    }
+
+
     const response = await fetch(`${import.meta.env.VITE_APP_API_URL}/user/reply-anket`, {
       method: 'POST',
       headers: {
@@ -110,6 +116,7 @@ const AnketPage = () => {
     const data = await response.json();
     if (data.success) {
       console.log('Survey responses submitted successfully');
+      localStorage.setItem("anketler", String([...Array(localStorage.getItem("anketler")), surveyID]))
       navigate('/anket');
     } else {
       console.error('Failed to submit survey responses:', data.message);

@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
-import Sidebar from '../components/Sidebar'; 
-import backgroundImage from '../assets/images/belediye.jpg'; 
+import Sidebar from '../components/Sidebar';
+import backgroundImage from '../assets/images/belediye.jpg';
 import './HomePage.css';
 import duyuru from '../assets/icons/duyuru.png';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Card, CardMedia, CardContent, Typography } from '@mui/material';
 import { CSSTransition } from 'react-transition-group';
-import './HomePageAnimations.css'; 
+import './HomePageAnimations.css';
 import ataturkImage from '../assets/images/m.png'
 
-const HomePage = () => { 
+const HomePage = () => {
   const [announcements, setAnnouncements] = useState([]);
   const [mainAnnouncement, setMainAnnouncement] = useState(null);
   const [selectedAnnouncement, setSelectedAnnouncement] = useState(null);
@@ -22,7 +22,7 @@ const HomePage = () => {
 
   const fetchMainAnnouncement = () => {
     const ApiEndpoint = `${import.meta.env.VITE_APP_API_URL}`;
-    
+
     fetch(ApiEndpoint + '/user/get-main-duyuru', {
       method: "GET",
       headers: {
@@ -33,6 +33,8 @@ const HomePage = () => {
       .then((data) => {
         if (data && data.data && data.data.duyuru) {
           setMainAnnouncement(data.data.duyuru);
+
+
           setSelectedAnnouncement(data.data.duyuru);
           setIsMainAnnouncementDialogOpen(true);
         } else {
@@ -44,7 +46,7 @@ const HomePage = () => {
 
   const fetchSurvey = () => {
     const ApiEndpoint = `${import.meta.env.VITE_APP_API_URL}`;
-    
+
     fetch(ApiEndpoint + '/user/get-main-anket', {
       method: "GET",
       headers: {
@@ -54,8 +56,12 @@ const HomePage = () => {
       .then((response) => response.json())
       .then((data) => {
         if (data && data.data && data.data.anket) {
-          setSurveyUrl('/anket'); 
-          setSurveyTitle(data.data.anket.title); 
+          setSurveyUrl('/anket');
+          setSurveyTitle(data.data.anket.title);
+          if (localStorage.getItem("anketler") && localStorage.getItem("anketler")?.split(",").includes(String(data.data.anket.id))) {
+
+            return;
+          }
           if (isInitialLoad) {
             setIsSurveyDialogOpen(true);
           }
@@ -68,9 +74,9 @@ const HomePage = () => {
 
   useEffect(() => {
     fetchMainAnnouncement();
-    
+
     const ApiEndpoint = `${import.meta.env.VITE_APP_API_URL}`;
-      
+
     fetch(ApiEndpoint + '/user/get-duyuru', {
       method: "GET",
       headers: {
@@ -108,9 +114,17 @@ const HomePage = () => {
     setSurveyUrl('');
   };
 
-  const Endpoint = `${import.meta.env.VITE_APP_URL }`;
+  const Endpoint = `${import.meta.env.VITE_APP_URL}`;
 
   const getImageUrl = (filename) => filename ? `${Endpoint}/duyuru/${filename}` : duyuru;
+
+
+
+
+
+
+
+
 
   return (
     <div className="home-page" style={{ backgroundImage: `url(${backgroundImage})` }}>
@@ -119,8 +133,8 @@ const HomePage = () => {
       <div className="content">
         <div className="announcement-col">
           {mainAnnouncement && !hasMainAnnouncementBeenClosed && (
-            <Card 
-              className="announcement-box" 
+            <Card
+              className="announcement-box"
               onClick={() => openDialog(mainAnnouncement)}
               style={{ marginBottom: '20px', cursor: 'pointer' }}
             >
@@ -131,9 +145,9 @@ const HomePage = () => {
                 alt={mainAnnouncement.title}
               />
               <CardContent>
-                <Typography 
-                  variant="h6" 
-                  component="div" 
+                <Typography
+                  variant="h6"
+                  component="div"
                   className="announcement-title"
                 >
                   {mainAnnouncement.title}
@@ -142,8 +156,8 @@ const HomePage = () => {
             </Card>
           )}
           {announcements.map((announcement) => (
-            <Card 
-              className="announcement-box" 
+            <Card
+              className="announcement-box"
               key={announcement.id}
               onClick={() => openDialog(announcement)}
               style={{ marginBottom: '20px', cursor: 'pointer' }}
@@ -155,9 +169,9 @@ const HomePage = () => {
                 alt={announcement.title}
               />
               <CardContent>
-                <Typography 
-                  variant="h6" 
-                  component="div" 
+                <Typography
+                  variant="h6"
+                  component="div"
                   className="announcement-title"
                 >
                   {announcement.title}
@@ -175,29 +189,29 @@ const HomePage = () => {
         classNames="dialog"
         unmountOnExit
       >
-        <Dialog 
-          open={isMainAnnouncementDialogOpen} 
+        <Dialog
+          open={isMainAnnouncementDialogOpen}
           onClose={closeMainAnnouncementDialog}
           BackdropProps={{
             onClick: closeMainAnnouncementDialog,
           }}
         >
-         <DialogTitle className="dialog-title">{selectedAnnouncement?.title}</DialogTitle>
-         <DialogContent className="dialog-content-text">
-           <img 
-             src={getImageUrl(selectedAnnouncement?.duyuruResimler[0]?.resim)} 
-             alt={selectedAnnouncement?.title} 
-             style={{ width: '100%', height: 'auto' }}
-           />
-           <Typography variant="body1" className="dialog-content-text">
-             {selectedAnnouncement?.content}
-           </Typography>
-         </DialogContent>
-         <DialogActions>
-           <Button onClick={closeMainAnnouncementDialog} color="primary">
-             Kapat
-           </Button>
-         </DialogActions>
+          <DialogTitle className="dialog-title">{selectedAnnouncement?.title}</DialogTitle>
+          <DialogContent className="dialog-content-text">
+            <img
+              src={getImageUrl(selectedAnnouncement?.duyuruResimler[0]?.resim)}
+              alt={selectedAnnouncement?.title}
+              style={{ width: '100%', height: 'auto' }}
+            />
+            <Typography variant="body1" className="dialog-content-text">
+              {selectedAnnouncement?.content}
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={closeMainAnnouncementDialog} color="primary">
+              Kapat
+            </Button>
+          </DialogActions>
         </Dialog>
       </CSSTransition>
 
@@ -208,8 +222,8 @@ const HomePage = () => {
         classNames="dialog"
         unmountOnExit
       >
-        <Dialog 
-          open={isSurveyDialogOpen && !isInitialLoad} 
+        <Dialog
+          open={isSurveyDialogOpen && !isInitialLoad}
           onClose={closeSurveyDialog}
           BackdropProps={{
             onClick: closeSurveyDialog,

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { createDuyuru,downloadClients, getDuyurular, deleteDuyuru, getClients, deleteClient, createClient, updateClient, getPhoneNumbers, deletePhoneNumber, createPhoneNumber, updatePhoneNumber, login, getPersonels, replyDestek, getDestekler, getMudurlukler, createMudurluk, deleteMudurluk, getMainDuyuru, downloadPersonel, downloadTelefon, uploadExcel, updateMudurluk, createPersonel, updatePersonel, deletePersonels, getAdmins, updateAdmin, deleteAdmin, createAdmin } = require("../controllers/admin");
+const { createDuyuru,downloadClients, getDuyurular, deleteDuyuru, getClients, deleteClient, createClient, updateClient, getPhoneNumbers, deletePhoneNumber, createPhoneNumber, updatePhoneNumber, login, getPersonels, replyDestek, getDestekler, getMudurlukler, createMudurluk, deleteMudurluk, getMainDuyuru, downloadPersonel, downloadTelefon, uploadExcel, updateMudurluk, createPersonel, updatePersonel, deletePersonels, getAdmins, updateAdmin, deleteAdmin, createAdmin, switchDuyuruActive, addDuyuruPicture, updateDuyuru, setMainDuyuru, setMainAnket, switchAnketActive } = require("../controllers/admin");
 const adminAuth = require("../middlewares/adminAuth");
 
 const multer = require('multer');
@@ -41,6 +41,14 @@ router.get("/get-duyurular" ,  adminAuth , getDuyurular)
 router.get("/get-main-duyuru" ,  adminAuth , getMainDuyuru)
 router.delete("/delete-duyuru/:id" ,  adminAuth , deleteDuyuru)
 router.post("/create-duyuru" ,upload2.single("image"),  adminAuth , createDuyuru)
+router.post("/update-duyuru" ,  adminAuth , updateDuyuru)
+router.post("/replace-duyuru-picture/:id" ,upload2.single("image"),  adminAuth , addDuyuruPicture)
+
+router.post("/set-main-duyuru/:duyuruID" ,  adminAuth , setMainDuyuru)
+router.post("/switch-duyuru/:id" ,  adminAuth , switchDuyuruActive)
+
+router.post("/set-main-anket/:anketID" ,  adminAuth , setMainAnket)
+router.post("/switch-anket/:id" ,  adminAuth , switchAnketActive)
 
 router.post("/create-personel" ,upload3.single("image"),  adminAuth , createPersonel)
 router.put("/update-personel/:id" ,upload3.single("image"),  adminAuth , updatePersonel)

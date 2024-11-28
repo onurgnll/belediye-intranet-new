@@ -112,6 +112,22 @@ const createAnket = async (req, res, next) => {
     }
 }
 
+const getAnketlerUser = async (req, res, next) => {
+    try {
+
+        const surveys = await Survey.findAll({
+            order: [["created_at", "DESC"]],
+            where: {isActive: true}
+        })
+
+
+        res.status(200).json(new Response(1, { surveys }, "success"));
+
+    } catch (error) {
+        console.log(error);
+        return next(new CustomError())
+    }
+}
 
 const getAnketler = async (req, res, next) => {
     try {
@@ -491,5 +507,6 @@ module.exports = {
     getAnket,
     getKullaniciCevap,
     getCevapStatistics,
-    deleteAnket
+    deleteAnket,
+    getAnketlerUser
 }

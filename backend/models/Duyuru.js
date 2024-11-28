@@ -24,6 +24,10 @@ module.exports = (sequelize) => {
     isMain: {
       type: DataTypes.TINYINT,
       defaultValue: 0
+    },
+    isActive: {
+      type: DataTypes.TINYINT,
+      defaultValue: 1
     }
   }, {
     sequelize,

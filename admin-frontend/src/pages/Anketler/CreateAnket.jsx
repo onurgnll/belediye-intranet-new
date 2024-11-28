@@ -3,7 +3,7 @@ import { Dialog, Button, TextField, FormControlLabel, Switch } from '@mui/materi
 import { requestWithAuth } from '../../helpers/requests';
 import { errorToast, successToast } from '../../helpers/toast';
 
-function CreateAnket({ handleClose, open, getAnketler }) {
+function CreateAnket({ handleClose, open, getAnketler,getMainSurvey }) {
     const [questionLength, setQuestionLength] = useState(1);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -31,6 +31,7 @@ function CreateAnket({ handleClose, open, getAnketler }) {
         if (response.success == 1) {
             handleClose()
             getAnketler()
+            getMainSurvey()
             successToast("Anket Oluşturuldu")
         }
 

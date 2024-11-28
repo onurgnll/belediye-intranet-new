@@ -6,7 +6,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import * as React from 'react';
-import { TextField } from "@mui/material";
+import { Switch, TextField } from "@mui/material";
 import { Person } from "@mui/icons-material";
 import Cevaplar from "./Cevaplar";
 import { PieChart } from "@mui/x-charts";
@@ -82,6 +82,43 @@ function Anket() {
         }
     }
 
+    const [checked, setChecked] = React.useState(false);
+    const [checked2, setChecked2] = React.useState(false);
+
+
+    useEffect(() => {
+        if (anket?.isActive == 1) {
+            setChecked(true);
+        }else{
+            
+            setChecked(false);
+        }
+    }, [anket]);
+
+
+    useEffect(() => {
+        if (anket?.isMain == 1) {
+            setChecked2(true);
+        }else{
+            
+            setChecked2(false);
+        }
+    }, [anket]);
+
+    const handleChangee = async (event) => {
+        setChecked(event.target.checked);
+        await requestWithAuth("post", "/admin/switch-anket/" + anket.id);
+    };
+
+    const handleChangeMainn = async (event) => {
+        setChecked2(event.target.checked);
+        await requestWithAuth("post", "/admin/set-main-anket/" + anket.id);
+    };
+
+
+
+
+
     const getStatistics = async () => {
         try {
             const resp = await requestWithAuth("get", "/admin/get-cevap-statistics/" + loc.pathname.split("/")[2]);
@@ -142,6 +179,7 @@ function Anket() {
                     <Tab label="Anketi Cevaplayanlar" {...a11yProps(0)} />
                     <Tab label="Cevap İstatistikleri" {...a11yProps(1)} />
                     <Tab label="Önizleme" {...a11yProps(2)} />
+                    <Tab label="Anket Ayarları" {...a11yProps(3)} />
                 </Tabs>
             </Box>
             <CustomTabPanel value={value} index={0}>
@@ -229,6 +267,27 @@ function Anket() {
                             </div>
                         </div>
                     ))}
+                </div>
+            </CustomTabPanel>
+            <CustomTabPanel value={value} index={3}>
+                <div className="d-flex flex-column">
+
+                    <div>
+                        <div>Aktif mi?</div>
+                        <Switch
+                            checked={checked}
+                            onChange={handleChangee}
+                            inputProps={{ "aria-label": "controlled" }}
+                        />
+                    </div>
+                    <div>
+                        <div>Önemli Anket mi?</div>
+                        <Switch
+                            checked={checked2}
+                            onChange={handleChangeMainn}
+                            inputProps={{ "aria-label": "controlled" }}
+                        />
+                    </div>
                 </div>
             </CustomTabPanel>
         </Box>

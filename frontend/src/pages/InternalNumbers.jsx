@@ -129,7 +129,7 @@ const InternalNumbers = () => {
             />
           </div>
           {loading ? (
-            <p>Loading...</p>
+            <p>Yükleniyor...</p>
           ) : (
             <table className="internal-numbers-table">
               <thead>

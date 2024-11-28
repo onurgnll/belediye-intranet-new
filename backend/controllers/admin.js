@@ -1,7 +1,7 @@
 
 
 const CustomError = require("../errors/CustomError");
-const { User, Admin, Telephone, DestekCevap, Duyuru, DuyuruResim, OgrenimDurumu, Mudurlukler, sequelize, Personel, Client, Destek } = require("../models");
+const { User, Admin, Telephone,Survey, DestekCevap, Duyuru, DuyuruResim, OgrenimDurumu, Mudurlukler, sequelize, Personel, Client, Destek } = require("../models");
 const Response = require("../responses/response");
 const { generateAccessToken } = require("../helpers/token");
 const { Sequelize, where, Op } = require("sequelize");
@@ -352,12 +352,154 @@ const createDuyuru = async (req, res, next) => {
     }
 }
 
+const updateDuyuru = async (req, res, next) => {
+    try {
+        const { title, content, main, duyuruID } = req.body
+
+
+
+        if (main) {
+
+            const lastMain = await Duyuru.findOne({ isMain: 1 })
+            if (lastMain) {
+                await Duyuru.update({ isMain: 0 }, { where: { isMain: 1 } })
+            }
+        }
+
+        const duyuru = await Duyuru.update({ title, content, isMain: main }, { where: { id: duyuruID } })
+
+        res.status(200).json(new Response(1, { duyuru }, "success"));
+
+
+    } catch (error) {
+        console.log(error);
+        return next(new CustomError())
+    }
+}
+
+
+const setMainDuyuru = async (req, res, next) => {
+    try {
+        const { duyuruID } = req.params
+
+        console.log(duyuruID);
+
+
+        const lastMain = await Duyuru.findOne({ where: {id: duyuruID}  })
+        // const lastMain = await Duyuru.findOne({ isMain: 1 })
+        // if (lastMain) {
+        //     await Duyuru.update({ isMain: 0 }, { where: { isMain: 1 } })
+        // }
+
+        await Duyuru.update({ isMain: !lastMain.isMain }, { where: { id: duyuruID } })
+
+        res.status(200).json(new Response(1, { }, "success"));
+
+
+    } catch (error) {
+        console.log(error);
+        return next(new CustomError())
+    }
+}
+const setMainAnket = async (req, res, next) => {
+    try {
+        const { anketID } = req.params
+
+
+
+
+        const lastMain = await Survey.findOne({ where: { id: anketID} })
+
+        const duyuru = await Survey.update({ isMain: !lastMain.isMain }, { where: { id: anketID } })
+
+        res.status(200).json(new Response(1, { duyuru }, "success"));
+
+
+    } catch (error) {
+        console.log(error);
+        return next(new CustomError())
+    }
+}
 const deleteDuyuru = async (req, res, next) => {
     try {
         const { id } = req.params
 
         console.log(id);
         await Duyuru.destroy({ where: { id } })
+
+        res.status(200).json(new Response(1, {}, "success"));
+
+
+    } catch (error) {
+        console.log(error);
+        return next(new CustomError())
+    }
+}
+
+const deleteDuyuruPicture = async (req, res, next) => {
+    try {
+        const { id } = req.params
+
+        await DuyuruResim.destroy({ where: { id } })
+
+        res.status(200).json(new Response(1, {}, "success"));
+
+
+    } catch (error) {
+        console.log(error);
+        return next(new CustomError())
+    }
+}
+
+const addDuyuruPicture = async (req, res, next) => {
+    try {
+        const { id } = req.params
+
+        await DuyuruResim.destroy({ where: { duyuruID: id } })
+        if (req.file) {
+
+            const link = req.file.filename
+            const duyuruResim = await DuyuruResim.create({ duyuruID: id, resim: link })
+
+        }
+
+
+        res.status(200).json(new Response(1, {}, "success"));
+
+
+    } catch (error) {
+        console.log(error);
+        return next(new CustomError())
+    }
+}
+
+
+
+
+const switchDuyuruActive = async (req, res, next) => {
+    try {
+        const { id } = req.params
+
+        const duyuru = await Duyuru.findOne({ where: { id } })
+
+        await Duyuru.update({ isActive: !duyuru.isActive }, { where: { id } })
+
+        res.status(200).json(new Response(1, {}, "success"));
+
+
+    } catch (error) {
+        console.log(error);
+        return next(new CustomError())
+    }
+}
+
+const switchAnketActive = async (req, res, next) => {
+    try {
+        const { id } = req.params
+
+        const duyuru = await Survey.findOne({ where: { id } })
+
+        await Survey.update({ isActive: !duyuru.isActive }, { where: { id } })
 
         res.status(200).json(new Response(1, {}, "success"));
 
@@ -923,9 +1065,10 @@ const uploadExcel = async (req, res, next) => {
 
         worksheet.eachRow(async (row, rowNumber) => {
             if (rowNumber > 1) { // Skip the header row
+                const mudurluk = await Mudurlukler.findOne({ where: { birim: row.getCell(3).value } })
                 let data = {
-                    name: row.getCell(2).value || null,
-                    departmentID: row.getCell(3).value || null,
+                    name: row.getCell(2).value || row.getCell(4).value || null,
+                    departmentID: mudurluk?.id || null,
                     description: row.getCell(4).value || null,
                     phone: row.getCell(5).value.split(" ")[3] || null,
                 };
@@ -976,9 +1119,9 @@ const getAdmins = async (req, res, next) => {
 
 const updateAdmin = async (req, res, next) => {
     try {
-        const { user_id, allowAdmins, allowAnket, allowDuyuru, allowIPS, allowMudurlukler, allowPersonel, allowPhones } = req.body
+        const { user_id, password, allowAdmins, allowAnket, allowDuyuru, allowIPS, allowMudurlukler, allowPersonel, allowPhones } = req.body
 
-        await Admin.update({ allowAdmins, allowAnket, allowDuyuru, allowIPS, allowMudurlukler, allowPersonel, allowPhones }, { where: { user_id: user_id } })
+        await Admin.update({ allowAdmins, password, allowAnket, allowDuyuru, allowIPS, allowMudurlukler, allowPersonel, allowPhones }, { where: { user_id: user_id } })
 
 
         res.status(200).json(new Response(1, {}, "success"));
@@ -998,7 +1141,7 @@ const createAdmin = async (req, res, next) => {
 
         const isAd = await Admin.findOne({ where: { username: username } })
 
-        if (isAd) return res.status(200).json(new Response(-1, {  }, "Bu kullanıcı adında bir admin var"));
+        if (isAd) return res.status(200).json(new Response(-1, {}, "Bu kullanıcı adında bir admin var"));
 
         const admin = await Admin.create({ allowAdmins, allowAnket, allowDuyuru, allowIPS, allowMudurlukler, allowPersonel, allowPhones, username, password })
 
@@ -1066,5 +1209,12 @@ module.exports = {
     getAdmins,
     updateAdmin,
     deleteAdmin,
-    createAdmin
+    createAdmin,
+    switchDuyuruActive,
+    deleteDuyuruPicture,
+    addDuyuruPicture,
+    updateDuyuru,
+    setMainDuyuru,
+    switchAnketActive,
+    setMainAnket
 }
