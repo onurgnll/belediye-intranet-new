@@ -6,9 +6,18 @@
   padding: 20px;
   align-items: flex-start; /* Üstten hizalama */
   margin-left: 150px; /* Soldan hizalama */
+  /* margin-top: 100px; */
+}
+.anket-container2 {
+  display: flex;
+  flex-direction: row; /* Öğeleri yan yana hizalar */
+  flex-wrap: wrap; /* Öğeler taşarsa sarma işlemi yapar */
+  gap: 20px;
+  padding: 20px;
+  align-items: flex-start; /* Üstten hizalama */
+  margin-left: 150px; /* Soldan hizalama */
   margin-top: 100px;
 }
-
 .survey-image {
   width: 80%;
   height: auto;
@@ -29,12 +38,6 @@
   flex-direction: column;
   align-items: center; /* İçerikleri ortalar */
   cursor: pointer; /* Üzerine gelindiğinde işaretçi değişir */
-}
-
-.survey-box:hover {
-  transform: scale(1.01);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
-	
 }
 
 .survey-title {

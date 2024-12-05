@@ -1121,8 +1121,8 @@ const uploadExcelForIPS = async (req, res, next) => {
             if (rowNumber > 1) { // Skip the header row
                 let data = {
                     name: row.getCell(1).value|| "",
-                    ip: row.getCell(2).value || null,
-                    address: row.getCell(3).value || null,
+                    ip: row.getCell(2).value || "",
+                    address: row.getCell(3).value || "",
                     status: 1,
                     surname: ""
                 };
