@@ -196,7 +196,13 @@ const getClients = async (req, res, next) => {
         };
         const clients = await Client.findAll({
             where: whereClause,
-            order: [["ip", "ASC"]],
+            // order: [["ip", "ASC"]],
+            order: [
+                [Sequelize.literal('CAST(SUBSTRING_INDEX(ip, ".", 1) AS UNSIGNED)'), 'ASC'],
+                [Sequelize.literal('CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(ip, ".", 2), ".", -1) AS UNSIGNED)'), 'ASC'],
+                [Sequelize.literal('CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(ip, ".", 3), ".", -1) AS UNSIGNED)'), 'ASC'],
+                [Sequelize.literal('CAST(SUBSTRING_INDEX(ip, ".", -1) AS UNSIGNED)'), 'ASC']
+            ],
             limit: per_page,
             offset: (page - 1) * per_page,
         });
@@ -228,8 +234,8 @@ const updateClient = async (req, res, next) => {
 
         const { id } = req.params
 
-        const { name, surname, ip, status } = req.body
-        await Client.update({ name, surname, ip, status }, { where: { id } })
+        const { name, surname, ip, status , mac} = req.body
+        await Client.update({ name, surname, ip, status , address:mac }, { where: { id } })
 
 
         res.status(200).json(new Response(1, {}, "success"));
@@ -245,8 +251,14 @@ const createClient = async (req, res, next) => {
     try {
 
 
-        const { name, surname, ip, status = 1 } = req.body
-        const client = await Client.create({ name, surname, ip, status, birthday: new Date() })
+        const { name = "", surname = "", ip, status = 1 , mac = "" } = req.body
+
+        const isClient = await Client.findOne({where: {ip: ip}})
+        if(isClient){
+            return res.status(200).json(new Response(-1, { }, "Bu IP zaten Ekli"));
+
+        }
+        const client = await Client.create({ name, surname, ip, status, birthday: new Date() , address: mac })
 
 
         res.status(200).json(new Response(1, { client }, "success"));
@@ -382,8 +394,6 @@ const setMainDuyuru = async (req, res, next) => {
     try {
         const { duyuruID } = req.params
 
-        console.log(duyuruID);
-
 
         const lastMain = await Duyuru.findOne({ where: {id: duyuruID}  })
         // const lastMain = await Duyuru.findOne({ isMain: 1 })
@@ -424,7 +434,6 @@ const deleteDuyuru = async (req, res, next) => {
     try {
         const { id } = req.params
 
-        console.log(id);
         await Duyuru.destroy({ where: { id } })
 
         res.status(200).json(new Response(1, {}, "success"));
@@ -618,7 +627,7 @@ const createPersonel = async (req, res, next) => {
             Unvani,
             OgrenimDurumu,
             Resim: req.file?.filename,
-            DogumTarihi: new Date(DogumTarihiYil + "-" + DogumTarihiAy + "-" + DogumTarihiGun),
+            DogumTarihi: DogumTarihiAy ? new Date(DogumTarihiYil + "-" + DogumTarihiAy + "-" + DogumTarihiGun) : null,
             author: "admin",
             durum: 1,
             ip: 0,
@@ -668,7 +677,7 @@ const updatePersonel = async (req, res, next) => {
             Unvani,
             OgrenimDurumu,
             Resim: req.file?.filename,
-            DogumTarihi: new Date(DogumTarihiYil + "-" + DogumTarihiAy + "-" + DogumTarihiGun),
+            DogumTarihi: DogumTarihiAy ?  new Date(DogumTarihiYil + "-" + DogumTarihiAy + "-" + DogumTarihiGun) : null,
             author: "admin",
             durum: 1,
             ip: 0,
@@ -992,7 +1001,8 @@ const downloadClients = async (req, res, next) => {
                 status: {
                     [Sequelize.Op.gte]: 0 // Filters for 'durum' greater than or equal to 0
                 },
-            }
+            },
+            order: [["ip" , "ASC"]]
         })
 
         const workbook = new ExcelJS.Workbook();
@@ -1002,19 +1012,17 @@ const downloadClients = async (req, res, next) => {
 
         // Add header row
         worksheet.columns = [
-            { header: 'Numara', key: 'number', width: 10 },
             { header: 'İsim', key: 'name', width: 30 },
-            { header: 'Soyisim', key: 'surname', width: 30 },
             { header: 'IP', key: 'ip', width: 30 },
+            { header: 'MAC', key: 'mac', width: 30 },
 
         ];
 
         personels.forEach((personel, index) => {
             worksheet.addRow({
-                number: index + 1,
-                name: personel.name || "",
-                surname: personel.surname || "",
+                name: personel.name + " " + personel.surname || "",
                 ip: personel?.ip || "",
+                mac: personel?.address || "",
 
             });
         });
@@ -1077,6 +1085,52 @@ const uploadExcel = async (req, res, next) => {
 
 
                 createPromises.push(Telephone.create(data));
+            }
+        });
+
+        await Promise.all(createPromises);
+
+
+
+        res.status(200).json(new Response(1, {}, "success"));
+    } catch (err) {
+        res.status(500).json(err);
+    }
+};
+
+
+
+const uploadExcelForIPS = async (req, res, next) => {
+    if (!req.file) {
+        return res.status(400).send('No file uploaded.');
+    }
+
+    try {
+        const workbook = new ExcelJS.Workbook();
+        await workbook.xlsx.load(req.file.buffer);
+
+        const worksheet = workbook.getWorksheet(1);
+        const createPromises = [];
+
+        await Client.destroy({
+            where: {},
+            truncate: true
+        });
+
+        worksheet.eachRow(async (row, rowNumber) => {
+            if (rowNumber > 1) { // Skip the header row
+                let data = {
+                    name: row.getCell(1).value|| "",
+                    ip: row.getCell(2).value || null,
+                    address: row.getCell(3).value || null,
+                    status: 1,
+                    surname: ""
+                };
+
+
+
+
+                createPromises.push(Client.create(data));
             }
         });
 
@@ -1202,7 +1256,7 @@ module.exports = {
     downloadTelefon,
     downloadClients,
     updatePersonel,
-    uploadExcel,
+    uploadExcel,uploadExcelForIPS,
 
 
 

@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
-import { requestWithAuth } from "../../helpers/requests";
-import { CloudDownload, Delete, NavigateBefore, NavigateNext, Phone } from "@mui/icons-material";
+import { requestWithAuth, requestWithAuthForm } from "../../helpers/requests";
+import { CloudDownload, CloudUpload, Delete, NavigateBefore, NavigateNext, Phone } from "@mui/icons-material";
 import { TextField } from "@mui/material";
 import CreatePhoneNumber from "./CreateClients";
 import "./Clients.css"
 import ReactPaginate from "react-paginate";
 import CreateClients from "./CreateClients";
 import UpdateClient from "./UpdateClient";
+import { errorToast, successToast } from "../../helpers/toast";
 
 function Clients() {
 
+    const [selectedFile, setSelectedFile] = useState(null); // Dosya seçimi için state
     const [search, setSearch] = useState("");
     const [ip, setIP] = useState("");
 
@@ -79,6 +81,34 @@ function Clients() {
     };
 
 
+    const handleFileSelect = (e) => {
+        setSelectedFile(e.target.files[0]);
+    };
+
+    const handleUpload = async () => {
+        if (!selectedFile) {
+            alert("Lütfen bir dosya seçin.");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+
+        try {
+            const res = await requestWithAuthForm("post", "/admin/upload-excel-for-ips", "", "", formData);
+            console.log(res);
+            if (res.success == 1) {
+                setPage(1)
+                getClients(page)
+                successToast("IPLER Güncellendi")
+            }else{
+                errorToast("Bir hata oluştu.")
+            }
+        } catch (error) {
+            console.error("Dosya yükleme hatası:", error);
+            alert("Dosya yükleme sırasında bir hata oluştu.");
+        }
+    };
 
 
     return (
@@ -109,6 +139,26 @@ function Clients() {
                         <CloudDownload sx={{ fontSize: 40 }}></CloudDownload>
                         <span className="fw-bold">İndir</span>
                     </div>
+                    <div className="d-flex flex-column align-items-center">
+                        {!selectedFile ? (
+                            <>
+                                <label htmlFor="file-upload" style={{ cursor: "pointer" , display: "flex" , flexDirection: "column"}}>
+                                    <CloudUpload sx={{ fontSize: 40 }} />
+                                    <span className="fw-bold">Yükle</span>
+                                </label>
+                                <input
+                                    id="file-upload"
+                                    type="file"
+                                    style={{ display: "none" }}
+                                    onChange={handleFileSelect}
+                                />
+                            </>
+                        ) : (
+                            <button className="upload-button" onClick={handleUpload}>
+                                {selectedFile.name} (Yükle)
+                            </button>
+                        )}
+                    </div>
                 </div>
                 <div className="mt-2">
 
@@ -120,8 +170,8 @@ function Clients() {
                 <thead>
                     <tr>
                         <th>İSİM</th>
-                        {/* <th>BİRİM</th> */}
                         <th>IP</th>
+                        <th>MAC</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -131,9 +181,10 @@ function Clients() {
                             return (
 
                                 <tr onClick={() => {setUpdatingClient(client); handleClickOpen2()}} key={client.id}>
-                                    <td>{client.name} {client.surname}</td>
+                                    <td>{client.name}</td>
                                     {/* <td>{client.surname}</td> */}
                                     <td>{client.ip}</td>
+                                    <td>{client.address}</td>
                                     <td><Delete onClick={(e) => {e.stopPropagation();handleDelete(client.id)}} style={{ color: "crimson", cursor: "pointer" }}></Delete></td>
 
                                 </tr>

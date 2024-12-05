@@ -57,11 +57,9 @@ const InternalNumbers = () => {
       }
   
       const data = await response.json();
-      console.log('API Response:', data);
   
       if (data.success) {
         const telephonesData = data.data.telephones;
-        console.log('Telephones Data:', telephonesData);
   
         // Access totalPages from the pagination object
         const totalPages = telephonesData.pagination?.total_page;
@@ -69,7 +67,6 @@ const InternalNumbers = () => {
         if (telephonesData && typeof totalPages === 'number') {
           setPhoneNumbers(telephonesData.result || []);
           setTotalPages(totalPages);
-          console.log('Total Pages:', totalPages);
         } else {
           console.error('Total pages not found or invalid format');
         }
@@ -129,7 +126,7 @@ const InternalNumbers = () => {
             />
           </div>
           {loading ? (
-            <p>Yükleniyor...</p>
+            <p>Loading...</p>
           ) : (
             <table className="internal-numbers-table">
               <thead>

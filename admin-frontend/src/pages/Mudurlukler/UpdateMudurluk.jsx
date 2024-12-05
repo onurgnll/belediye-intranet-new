@@ -86,7 +86,6 @@ function UpdateMudurluk({ handleClose, open, getMudurlukler, mudurluk }) {
                             getClients(value)
                         }}
                         onChange={(event, newValue) => {
-                            console.log(newValue);
                             setMudur(newValue)
                         }}
                     />

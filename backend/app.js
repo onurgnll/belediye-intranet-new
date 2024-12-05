@@ -28,8 +28,6 @@ const PORT = process.env.PORT || 5000;
 
 app.get('/get-ip', (req, res) => {
   const ipAddress = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-  console.log(req.socket);
-  console.log(ipAddress);
   res.json({ ip: ipAddress });
 });
 app.listen(PORT,"::",() => {

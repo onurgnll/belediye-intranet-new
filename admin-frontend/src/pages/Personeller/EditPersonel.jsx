@@ -3,8 +3,9 @@ import { Switch, FormControlLabel, Dialog, Button, TextField, FormControl, Input
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { Done } from '@mui/icons-material';
 import { requestWithAuth, requestWithAuthForm } from '../../helpers/requests';
+import { errorToast, successToast } from '../../helpers/toast';
 
-function EditPersonel({ handleClose, open, personel }) {
+function EditPersonel({ getPersonels, page, handleClose, open, personel }) {
 
     const ogrenimler = ["İlkokul", "Ortaokul", "Lise", "Önlisans", "Lisans", "Yüksek Lisans", "Doktora", "Okur Yazar", "Cahil", "İlk Öğretim"];
 
@@ -27,7 +28,7 @@ function EditPersonel({ handleClose, open, personel }) {
     });
 
     const [selectedImage, setSelectedImage] = useState(`${import.meta.env.VITE_APP_URL}/kullanici/${personel?.Resim}`);
-    
+
     const [selectedImage2, setSelectedImage2] = useState();
     useEffect(() => {
         setFormData({
@@ -86,15 +87,20 @@ function EditPersonel({ handleClose, open, personel }) {
     const handleSubmit = async () => {
         // Handle form submission
         const form = new FormData();
-        Object.keys(formData).forEach(key => form.append(key, formData[key]));
+        Object.keys(formData).forEach(key => { if (formData[key] != "") form.append(key, formData[key]) });
 
 
         if (selectedImage2) {
             form.append("image", selectedImage2);
         }
 
-        await requestWithAuthForm("put", "/admin/update-personel/",formData.ID,"" ,  form);
-        // handleClose();
+        const res = await requestWithAuthForm("put", "/admin/update-personel/", formData.ID, "", form);
+        handleClose();
+        getPersonels(page)
+        if (res.success > 0)
+            successToast("Personel Başarıyla Güncellendi")
+        else
+            errorToast("Personel Güncellenirken Hata")
     }
 
     return (
@@ -252,7 +258,7 @@ function EditPersonel({ handleClose, open, personel }) {
                     onClick={handleSubmit}
                     style={{ marginTop: '1rem' }}
                 >
-                    Oluştur
+                    Düzenle
                 </Button>
             </div>
         </Dialog>

@@ -8,7 +8,6 @@ function Cevaplar({ handleClose, open, id }) {
     const getResponses = async () => {
         try {
             const resp = await requestWithAuth("get", "/admin/get-cevap/" + id);
-            console.log(resp);
             const processedAnswers = combineAnswers(resp.data.answer.Answers);
             setResponses({ ...resp.data.answer, Answers: processedAnswers });
         } catch (error) {

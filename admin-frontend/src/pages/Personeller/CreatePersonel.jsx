@@ -4,8 +4,9 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { Done } from '@mui/icons-material';
 import { requestWithAuth, requestWithAuthForm } from '../../helpers/requests';
 import defaultphoto from "../../assets/avradfaez.png"
+import { errorToast, successToast } from '../../helpers/toast';
 
-function CreatePersonel({ handleClose, open }) {
+function CreatePersonel({ getPersonels, page,handleClose, open }) {
 
     const ogrenimler = ["İlkokul", "Ortaokul", "Lise", "Önlisans", "Lisans", "Yüksek Lisans", "Doktora", "Okur Yazar", "Cahil", "İlk Öğretim"];
 
@@ -65,24 +66,26 @@ function CreatePersonel({ handleClose, open }) {
     const handleSubmit = async () => {
         if (!validateForm()) return;
         const form = new FormData();
-        Object.keys(formData).forEach(key => form.append(key, formData[key]));
+        Object.keys(formData).forEach(key => {if(formData[key] != "") form.append(key, formData[key])});
         if (selectedImage2) {
             form.append("image", selectedImage2);
         }
 
-        await requestWithAuthForm("post", "/admin/create-personel","","" ,  form);
+        const res = await requestWithAuthForm("post", "/admin/create-personel","","" ,  form);
         handleClose();
+        getPersonels(page)
+        if (res.success > 0)
+            successToast("Personel Başarıyla Oluşturuldu")
+        else
+            errorToast("Personel Oluşturulurken Hata")
     }
     const [errors, setErrors] = useState({});
 
     const validateForm = () => {
         let formErrors = {};
-        if (!formData.KartNo) formErrors.KartNo = "Kart No zorunludur.";
         if (!formData.Adi) formErrors.Adi = "İsim zorunludur.";
         if (!formData.Soyadi) formErrors.Soyadi = "Soyisim zorunludur.";
         if (!formData.TCKimlikNo) formErrors.TCKimlikNo = "TC Kimlik No zorunludur.";
-        if (!formData.DogumTarihiGun || !formData.DogumTarihiAy || !formData.DogumTarihiYil) formErrors.DogumTarihi = "Doğum Tarihi zorunludur.";
-        if (!selectedImage2) formErrors.image = "Fotoğraf zorunludur.";
         setErrors(formErrors);
         return Object.keys(formErrors).length === 0;
     }

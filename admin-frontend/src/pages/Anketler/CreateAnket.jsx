@@ -23,7 +23,6 @@ function CreateAnket({ handleClose, open, getAnketler,getMainSurvey }) {
 
         const response = await requestWithAuth("post", "/admin/create-anket", "", "", body)
 
-        console.log(response);
 
         if (response.success == -1) {
             errorToast(response.message)

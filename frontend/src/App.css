@@ -6,7 +6,8 @@ body {
 }
 
 .background {
-  background-image: url('./assets/images/belediye.jpg'); /* Arka plan resminizin yolu */
+  /*background-image: url('./assets/images/belediye.jpg'); /* Arka plan resminizin yolu */
+  background: linear-gradient(45deg, #b5e1fa 40%, #527bc1);
   background-size: cover;
   background-position: center;
   height: 100vh; /* Tam ekran yüksekliği */

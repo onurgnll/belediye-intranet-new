@@ -8,8 +8,8 @@ import { errorToast, successToast } from '../../helpers/toast';
 function CreateClients({ handleClose, open, getClients,setPage }) {
 
     const [name, setName] = useState();
-    const [surname, setSurname] = useState();
     const [ip, setIP] = useState();
+    const [mac, setMac] = useState();
     
     const [errors, setErrors] = useState({});
 
@@ -20,7 +20,7 @@ function CreateClients({ handleClose, open, getClients,setPage }) {
 
 
 
-        const resp = await requestWithAuth("post" , "/admin/create-client" , "" , "" ,{name, surname , ip})
+        const resp = await requestWithAuth("post" , "/admin/create-client" , "" , "" ,{name , ip , mac})
 
         if(resp.success ==1){
             handleClose()
@@ -28,7 +28,7 @@ function CreateClients({ handleClose, open, getClients,setPage }) {
             setPage(1)
             getClients(1)
         }else{
-            errorToast("IP Oluştururken hata.")
+            errorToast(resp.message)
         }
 
     };
@@ -54,20 +54,20 @@ function CreateClients({ handleClose, open, getClients,setPage }) {
                     <TextField
                         className='mt-2'
                         fullWidth
-                        id="surname"
-                        label="Soyisim"
-                        variant="outlined"
-                        value={surname}
-                        onChange={(e) => setSurname(e.target.value)}
-                    />
-                    <TextField
-                        className='mt-2'
-                        fullWidth
                         id="ip"
                         label="IP"
                         variant="outlined"
                         value={ip}
                         onChange={(e) => setIP(e.target.value)}
+                    />
+                    <TextField
+                        className='mt-2'
+                        fullWidth
+                        id="mac"
+                        label="MAC"
+                        variant="outlined"
+                        value={mac}
+                        onChange={(e) => setMac(e.target.value)}
                     />
 
                     <Button

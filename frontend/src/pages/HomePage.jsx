@@ -248,7 +248,7 @@ const HomePage = () => {
       <div className="ataturk-container">
         <img src={ataturkImage} alt="Atatürk" className="ataturk-image" />
         <div className="ataturk-quote">
-          "Kendiniz için değil, bağlı bulunduğunuz ulus için elbirliği ile çalışınız. Çalışmaların en yükseği budur."
+          "Yurdunu en çok seven görevini en iyi şekilde yapandır."
         </div>
       </div>
     </div>

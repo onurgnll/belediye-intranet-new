@@ -66,7 +66,6 @@ function Telephones() {
 
         try {
             const res = await requestWithAuthForm("post", "/admin/upload-excel", "", "", formData);
-            console.log(res);
             if (res.success == 1) {
                 setPage(1)
                 getPhones(page)

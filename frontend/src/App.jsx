@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import InternalNumbers from './pages/InternalNumbers';
@@ -7,14 +7,6 @@ import AnketPage from './pages/AnketPage';
 
 
 function App() {
-
-
-
-
-  
-
-
-
   return (
     <Router>
       <Routes>

@@ -67,7 +67,6 @@ const Anket = () => {
     }
   };
 
-  console.log(mainSurvey);
   return (
     <div className="anket-page">
       <Header />

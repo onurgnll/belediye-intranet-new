@@ -40,8 +40,6 @@ export const requestWithAuth = async (method, url, action, api, body) => {
 export const requestWithAuthForm = async (method, url, action, api, body) => {
     try {
         const token = getToken()
-        console.log(body);
-    
     
         const response = await fetch(`${ApiEndpoint}${url}${action != null ? action : ""}`, {
             method: method,

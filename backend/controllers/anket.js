@@ -219,7 +219,6 @@ const replyAnket = async (req, res, next) => {
                 // if (question.question_text != "Adınız Soyadınız") {
 
                     const answers = element.text.split(";")
-                    console.log(answers);
                     for (const elementt of answers) {
 
                         await Answer.create({
@@ -394,7 +393,6 @@ const getKullaniciCevap = async (req, res, next) => {
 async function getSurveyStatistics(answers) {
     // Step 1: Create a lookup table for choices
     const choiceLookup = {};
-    console.log(answers);
     for (const answer of answers) {
         if (answer?.Question?.Choices) {
             for (const choice of answer.Question.Choices) {

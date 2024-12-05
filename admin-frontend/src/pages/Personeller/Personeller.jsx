@@ -101,8 +101,8 @@ function Personeller() {
 
 
         <div style={{marginRight: "5rem"}} className="mx-">
-            <EditPersonel open={open2} handleClose={handleClose2} personel={selectedPersonel}></EditPersonel>
-            <CreatePersonel open={open} handleClose={handleClose}></CreatePersonel>
+            <EditPersonel getPersonels={getPersonels} page={page} open={open2} handleClose={handleClose2} personel={selectedPersonel}></EditPersonel>
+            <CreatePersonel getPersonels={getPersonels} page={page} open={open} handleClose={handleClose}></CreatePersonel>
             <div className="d-flex align-items-center mt-3">
                 <div className="w-25">
                     <FormControl fullWidth>

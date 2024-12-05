@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { createDuyuru,downloadClients, getDuyurular, deleteDuyuru, getClients, deleteClient, createClient, updateClient, getPhoneNumbers, deletePhoneNumber, createPhoneNumber, updatePhoneNumber, login, getPersonels, replyDestek, getDestekler, getMudurlukler, createMudurluk, deleteMudurluk, getMainDuyuru, downloadPersonel, downloadTelefon, uploadExcel, updateMudurluk, createPersonel, updatePersonel, deletePersonels, getAdmins, updateAdmin, deleteAdmin, createAdmin, switchDuyuruActive, addDuyuruPicture, updateDuyuru, setMainDuyuru, setMainAnket, switchAnketActive } = require("../controllers/admin");
+const { createDuyuru,downloadClients, getDuyurular, deleteDuyuru, getClients, deleteClient, createClient, updateClient, getPhoneNumbers, deletePhoneNumber, createPhoneNumber, updatePhoneNumber, login, getPersonels, replyDestek, getDestekler, getMudurlukler, createMudurluk, deleteMudurluk, getMainDuyuru, downloadPersonel, downloadTelefon, uploadExcel, updateMudurluk, createPersonel, updatePersonel, deletePersonels, getAdmins, updateAdmin, deleteAdmin, createAdmin, switchDuyuruActive, addDuyuruPicture, updateDuyuru, setMainDuyuru, setMainAnket, switchAnketActive, uploadExcelForIPS } = require("../controllers/admin");
 const adminAuth = require("../middlewares/adminAuth");
 
 const multer = require('multer');
@@ -107,4 +107,5 @@ router.delete("/delete-admin/:id" , adminAuth , deleteAdmin)
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 router.post("/upload-excel" ,upload.single("file") , uploadExcel)
+router.post("/upload-excel-for-ips" ,upload.single("file") , uploadExcelForIPS)
 module.exports = router;

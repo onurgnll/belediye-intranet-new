@@ -115,7 +115,6 @@ const AnketPage = () => {
 
     const data = await response.json();
     if (data.success) {
-      console.log('Survey responses submitted successfully');
       localStorage.setItem("anketler", String([...Array(localStorage.getItem("anketler")), surveyID]))
       navigate('/anket');
     } else {
@@ -133,8 +132,6 @@ const AnketPage = () => {
     }
   };
 
-  console.log(answers);
-  console.log(tags);
 
   return (
     <div>

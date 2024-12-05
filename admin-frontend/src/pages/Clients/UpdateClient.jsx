@@ -8,8 +8,8 @@ import { errorToast, successToast } from '../../helpers/toast';
 function UpdateClient({ handleClose, open, getClients, setPage , client}) {
 
     const [name, setName] = useState();
-    const [surname, setSurname] = useState();
     const [ip, setIP] = useState();
+    const [mac, setMac] = useState();
 
     const [errors, setErrors] = useState({});
 
@@ -17,9 +17,9 @@ function UpdateClient({ handleClose, open, getClients, setPage , client}) {
 
     useEffect(() => {
         if(open){
-            setName(client?.name)
-            setSurname(client?.surname)
+            setName(client?.name +" " + client?.surname)
             setIP(client.ip)
+            setMac(client.address)
         }
     }, [open]);
 
@@ -28,7 +28,7 @@ function UpdateClient({ handleClose, open, getClients, setPage , client}) {
 
 
 
-        const resp = await requestWithAuth("put", "/admin/update-client/", client.id, "", { name, surname, ip,status: 1 })
+        const resp = await requestWithAuth("put", "/admin/update-client/", client.id, "", { name, ip,status: 1 , mac })
 
         if (resp.success == 1) {
 
@@ -65,20 +65,20 @@ function UpdateClient({ handleClose, open, getClients, setPage , client}) {
                     <TextField
                         className='mt-2'
                         fullWidth
-                        id="phonetelephone"
-                        label="Soyisim"
-                        variant="outlined"
-                        value={surname}
-                        onChange={(e) => setSurname(e.target.value)}
-                    />
-                    <TextField
-                        className='mt-2'
-                        fullWidth
                         id="ip"
                         label="IP"
                         variant="outlined"
                         value={ip}
                         onChange={(e) => setIP(e.target.value)}
+                    />
+                    <TextField
+                        className='mt-2'
+                        fullWidth
+                        id="mac"
+                        label="MAC"
+                        variant="outlined"
+                        value={mac}
+                        onChange={(e) => setMac(e.target.value)}
                     />
 
                     <Button
