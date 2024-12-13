@@ -18,8 +18,8 @@ function UpdateMudurluk({ handleClose, open, getMudurlukler, mudurluk }) {
     useEffect(() => {
         if (open) {
             setName(mudurluk?.birim)
-            setMudur({label: (mudurluk?.mudurr.name + " " + mudurluk?.mudurr.surname), value: mudurluk.mudurr.id})
-            setOptions([{ label: (mudurluk?.mudurr.name +" "+ mudurluk?.mudurr.surname), value: mudurluk?.mudurr.id }])
+            setMudur({label: (mudurluk?.mudurr?.name + " " + mudurluk?.mudurr?.surname), value: mudurluk?.mudurr?.id})
+            setOptions([{ label: (mudurluk?.mudurr?.name +" "+ mudurluk?.mudurr?.surname), value: mudurluk?.mudurr?.id }])
         }
     }, [open]);
 

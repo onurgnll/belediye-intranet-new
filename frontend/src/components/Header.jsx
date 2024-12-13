@@ -15,7 +15,7 @@ const Header = () => {
 
   const whoami = async () => {
 
-    const ApiEndpoint = `http://192.168.1.184:5000/api`;
+    const ApiEndpoint = `${import.meta.env.VITE_APP_API_URL}`;
     const res = await
       fetch(ApiEndpoint + '/user/whoami', {
         method: "GET",
@@ -39,7 +39,7 @@ const Header = () => {
         {
           ipm &&
 
-          <span className='fw-bold mx-3'>{ipm.switchh.name} - {ipm.ip}</span>
+          <span className='fw-bold mx-3'>{ipm?.switchh?.name} - {ipm?.ip}</span>
         }
         <img src={logo2} alt="Atatürk Logo" className="logo-icon2" />
       </div>
