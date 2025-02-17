@@ -18,8 +18,8 @@ function UpdateMudurluk({ handleClose, open, getMudurlukler, mudurluk }) {
     useEffect(() => {
         if (open) {
             setName(mudurluk?.birim)
-            setMudur({label: (mudurluk?.mudurr?.name + " " + mudurluk?.mudurr?.surname), value: mudurluk?.mudurr?.id})
-            setOptions([{ label: (mudurluk?.mudurr?.name +" "+ mudurluk?.mudurr?.surname), value: mudurluk?.mudurr?.id }])
+            setMudur({label: (mudurluk?.mudurr?.Adi + " " + mudurluk?.mudurr?.Soyadi), value: mudurluk?.mudurr?.ID})
+            setOptions([{ label: (mudurluk?.mudurr?.Adi +" "+ mudurluk?.mudurr?.Soyadi), value: mudurluk?.mudurr?.ID }])
         }
     }, [open]);
 
@@ -27,27 +27,29 @@ function UpdateMudurluk({ handleClose, open, getMudurlukler, mudurluk }) {
         event.preventDefault();
 
 
+        console.log(mudur);
 
         const resp = await requestWithAuth("put", "/admin/update-mudurluk/", mudurluk.id, "", { birim: name, mudur: mudur.value })
 
         if (resp.success == 1) {
             getMudurlukler()
             handleClose()
-            successToast("IP Güncellendi")
+            successToast("Müdürlük Başarıyla Güncellendi")
         } else {
 
-            errorToast("IP Güncellenirken Hata.")
+            errorToast("Müdürlük Güncellenirken Hata.")
         }
 
     };
 
 
     const getClients = async (arg) => {
-        const resp = await requestWithAuth("post", "/admin/get-clients", "", "", { name: arg || "" })
+        const resp = await requestWithAuth("post", "/admin/get-personels", "", "", { name: arg || "" })
 
+        console.log(resp);
         setOptions([])
-        for (const element of resp.data.clients.result) {
-            setOptions(prevOptions => [...prevOptions, { label: (element.name +" "+ element.surname), value: element.id }]);
+        for (const element of resp.data.personels.result) {
+            setOptions(prevOptions => [...prevOptions, { label: (element.Adi +" "+ element.Soyadi), value: element.ID }]);
         }
     }
     return (

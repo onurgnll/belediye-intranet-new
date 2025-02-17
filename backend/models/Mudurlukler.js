@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // Define associations here if needed
       
-      Mudurlukler.belongsTo(models.Client, {
+      Mudurlukler.belongsTo(models.Personel, {
         foreignKey: 'mudur',
         as: 'mudurr' // Alias for the association
       });

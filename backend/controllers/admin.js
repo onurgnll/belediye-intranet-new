@@ -758,7 +758,7 @@ const getMudurlukler = async (req, res, next) => {
                 }
             },
             include: {
-                model: Client,
+                model: Personel,
                 as: "mudurr"
             },
             order: [["birim", "ASC"]]
@@ -1073,12 +1073,12 @@ const uploadExcel = async (req, res, next) => {
 
         worksheet.eachRow(async (row, rowNumber) => {
             if (rowNumber > 1) { // Skip the header row
-                const mudurluk = await Mudurlukler.findOne({ where: { birim: row.getCell(3).value } })
+                const mudurluk = await Mudurlukler.findOne({ where: { birim: row.getCell(4).value } })
                 let data = {
-                    name: row.getCell(2).value || row.getCell(4).value || null,
+                    name: row.getCell(2).value || row.getCell(3).value || null,
                     departmentID: mudurluk?.id || null,
-                    description: row.getCell(4).value || null,
-                    phone: row.getCell(5).value.split(" ")[3] || null,
+                    description: row.getCell(3).value || null,
+                    phone: row.getCell(5).value || null,
                 };
 
 

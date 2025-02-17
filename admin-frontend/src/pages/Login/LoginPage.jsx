@@ -11,8 +11,9 @@ function LoginPage() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const dispatch = useDispatch()
-    const handleLogin = async() => {
+    const handleLogin = async(event) => {
 
+        event.preventDefault(); // Enter tuşuna basıldığında formun yenilenmesini engeller
 
         const resp = await requestWithoutAuth("post" , "/admin/login" , "" , "" , {username , password})
 
@@ -31,7 +32,7 @@ function LoginPage() {
     return (
         <div style={{ height: "100vh", width: "100%" }} className="asdasdas d-flex flex-column justify-content-center align-items-center">
             <img style={{ height: "250px", width: "250px" }} src={logo} alt="" />
-            <div className="d-flex flex-column w-25 mt-5 align-items-center">
+            <form onSubmit={handleLogin} className="d-flex flex-column w-25 mt-5 align-items-center">
                 <TextField 
                     size="small" 
                     sx={{ backgroundColor: "white", borderRadius: "10px" }} 
@@ -55,11 +56,11 @@ function LoginPage() {
                     sx={{ borderRadius: "15px", backgroundColor: "#E6453A" }} 
                     className="mt-3 w-75" 
                     variant="contained"
-                    onClick={handleLogin}
+                    type="submit"
                 >
                     Giriş Yap
                 </Button>
-            </div>
+            </form>
         </div>
     );
 }

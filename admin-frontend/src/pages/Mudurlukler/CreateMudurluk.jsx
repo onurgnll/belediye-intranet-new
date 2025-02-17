@@ -24,7 +24,7 @@ function CreateMudurluk({ handleClose, open, getMudurlukler }) {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-
+        
 
         const resp = await requestWithAuth("post", "/admin/create-mudurluk", "", "", { birim:name, mudur })
 
@@ -48,11 +48,11 @@ function CreateMudurluk({ handleClose, open, getMudurlukler }) {
 
 
     const getClients = async (arg) => {
-        const resp = await requestWithAuth("post", "/admin/get-clients", "", "", { name: arg || "" })
+        const resp = await requestWithAuth("post", "/admin/get-personels", "", "", { name: arg || "" })
 
         setOptions([])
-        for (const element of resp.data.clients.result) {
-            setOptions(prevOptions => [...prevOptions, { label: (element.name +" "+ element.surname), value: element.id }]);
+        for (const element of resp.data.personels.result) {
+            setOptions(prevOptions => [...prevOptions, { label: (element.Adi +" "+ element.Soyadi), value: element.ID }]);
         }
     }
 

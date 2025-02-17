@@ -87,7 +87,7 @@ function Mudurlukler() {
 
                                 <tr onClick={() => {handleClickOpen2(); setUpdatingMudurluk(mudurluk)}} key={mudurluk.id}>
                                     <td>{mudurluk?.birim}</td>
-                                    <td><div className="d-flex flex-column align-items-center"><span>{mudurluk?.mudurr?.name} {mudurluk?.mudurr?.surname}</span> </div></td>
+                                    <td><div className="d-flex flex-column align-items-center"><span>{mudurluk?.mudurr?.Adi} {mudurluk?.mudurr?.Soyadi}</span> </div></td>
                                     
                                     
                                     {/* <td><Delete onClick={() => handleDelete(phone.id)} style={{ color: "crimson", cursor: "pointer" }}></Delete></td> */}
