@@ -1,7 +1,7 @@
 
 
 const CustomError = require("../errors/CustomError");
-const { User, Admin, Telephone,Survey, DestekCevap, Duyuru, DuyuruResim, OgrenimDurumu, Mudurlukler, sequelize, Personel, Client, Destek } = require("../models");
+const { User, Admin, Telephone, Survey, DestekCevap, Duyuru, DuyuruResim, OgrenimDurumu, Mudurlukler, sequelize, Personel, Client, Destek } = require("../models");
 const Response = require("../responses/response");
 const { generateAccessToken } = require("../helpers/token");
 const { Sequelize, where, Op } = require("sequelize");
@@ -234,8 +234,8 @@ const updateClient = async (req, res, next) => {
 
         const { id } = req.params
 
-        const { name, surname, ip, status , mac} = req.body
-        await Client.update({ name, surname, ip, status , address:mac }, { where: { id } })
+        const { name, surname, ip, status, mac } = req.body
+        await Client.update({ name, surname, ip, status, address: mac }, { where: { id } })
 
 
         res.status(200).json(new Response(1, {}, "success"));
@@ -251,14 +251,14 @@ const createClient = async (req, res, next) => {
     try {
 
 
-        const { name = "", surname = "", ip, status = 1 , mac = "" } = req.body
+        const { name = "", surname = "", ip, status = 1, mac = "" } = req.body
 
-        const isClient = await Client.findOne({where: {ip: ip}})
-        if(isClient){
-            return res.status(200).json(new Response(-1, { }, "Bu IP zaten Ekli"));
+        const isClient = await Client.findOne({ where: { ip: ip } })
+        if (isClient) {
+            return res.status(200).json(new Response(-1, {}, "Bu IP zaten Ekli"));
 
         }
-        const client = await Client.create({ name, surname, ip, status, birthday: new Date() , address: mac })
+        const client = await Client.create({ name, surname, ip, status, birthday: new Date(), address: mac })
 
 
         res.status(200).json(new Response(1, { client }, "success"));
@@ -395,7 +395,7 @@ const setMainDuyuru = async (req, res, next) => {
         const { duyuruID } = req.params
 
 
-        const lastMain = await Duyuru.findOne({ where: {id: duyuruID}  })
+        const lastMain = await Duyuru.findOne({ where: { id: duyuruID } })
         // const lastMain = await Duyuru.findOne({ isMain: 1 })
         // if (lastMain) {
         //     await Duyuru.update({ isMain: 0 }, { where: { isMain: 1 } })
@@ -403,7 +403,7 @@ const setMainDuyuru = async (req, res, next) => {
 
         await Duyuru.update({ isMain: !lastMain.isMain }, { where: { id: duyuruID } })
 
-        res.status(200).json(new Response(1, { }, "success"));
+        res.status(200).json(new Response(1, {}, "success"));
 
 
     } catch (error) {
@@ -418,7 +418,7 @@ const setMainAnket = async (req, res, next) => {
 
 
 
-        const lastMain = await Survey.findOne({ where: { id: anketID} })
+        const lastMain = await Survey.findOne({ where: { id: anketID } })
 
         const duyuru = await Survey.update({ isMain: !lastMain.isMain }, { where: { id: anketID } })
 
@@ -522,9 +522,9 @@ const switchAnketActive = async (req, res, next) => {
 
 const getPersonels = async (req, res, next) => {
     try {
-        const { name, departman, kartno, unvan } = req.body
+        const { name, departman, kartno, unvan, cinsiyet, aktiflik } = req.body
 
-        const { page = 1, per_page = 10 } = req.query
+        const { page = 1, per_page = 50 } = req.query
 
         const whereClause = {
             durum: {
@@ -556,7 +556,24 @@ const getPersonels = async (req, res, next) => {
         if (departman && departman.trim() !== "") {
             whereClause.bolum = Number(departman);
         }
+        if (cinsiyet) {
+            whereClause.Cinsiyeti = Number(cinsiyet)
+        }
 
+        if (aktiflik) {
+            const aktiflikk = Number(aktiflik)
+            if (aktiflikk < 0) {
+
+                whereClause.durum = {
+                    [Op.lt]: 0
+                }
+            } else {
+
+                whereClause.durum = {
+                    [Op.gte]: 0
+                }
+            }
+        }
         const personels = await Personel.findAll({
             include: [
                 {
@@ -610,7 +627,10 @@ const createPersonel = async (req, res, next) => {
             DogumTarihiYil,
             OgrenimDurumu,
             Bolum,
-            Unvani
+            Unvani,
+            Cinsiyeti,
+            AltBolum1,
+            AltBolum2
         } = req.body
 
 
@@ -625,13 +645,16 @@ const createPersonel = async (req, res, next) => {
             Departman: Bolum,
             Bolum,
             Unvani,
-            OgrenimDurumu,
+            OgrenimDurumu: OgrenimDurumu ? OgrenimDurumu : 0,
+            Cinsiyeti,
             Resim: req.file?.filename,
             DogumTarihi: DogumTarihiAy ? new Date(DogumTarihiYil + "-" + DogumTarihiAy + "-" + DogumTarihiGun) : null,
             author: "admin",
             durum: 1,
             ip: 0,
             member: 100,
+            AltBolum1,
+            AltBolum2,
             date: new Date()
         })
 
@@ -660,7 +683,10 @@ const updatePersonel = async (req, res, next) => {
             DogumTarihiYil,
             OgrenimDurumu,
             Bolum,
-            Unvani
+            Unvani,
+            Cinsiyeti,
+            AltBolum1,
+            AltBolum2
         } = req.body
 
         const { id } = req.params
@@ -675,13 +701,16 @@ const updatePersonel = async (req, res, next) => {
             Departman: Bolum,
             Bolum,
             Unvani,
-            OgrenimDurumu,
+            OgrenimDurumu: OgrenimDurumu ? OgrenimDurumu : 0,
+            Cinsiyeti,
             Resim: req.file?.filename,
-            DogumTarihi: DogumTarihiAy ?  new Date(DogumTarihiYil + "-" + DogumTarihiAy + "-" + DogumTarihiGun) : null,
+            DogumTarihi: DogumTarihiAy ? new Date(DogumTarihiYil + "-" + DogumTarihiAy + "-" + DogumTarihiGun) : null,
             author: "admin",
             durum: 1,
             ip: 0,
             member: 100,
+            AltBolum1,
+            AltBolum2,
             date: new Date()
         }, { where: { ID: id } })
 
@@ -840,10 +869,22 @@ const updateMudurluk = async (req, res, next) => {
 const downloadPersonel = async (req, res, next) => {
 
     try {
+        const { status } = req.params
 
+        let whereClause = {}
+        if (Number(status) > 0) {
+            whereClause.durum = {
+                [Op.gt]: 0
+            }
+        } else {
+            whereClause.durum = {
+                [Op.lte]: 0
+            }
 
+        }
         const personels = await Personel.findAll(
             {
+                where: whereClause,
                 include: [
                     {
                         model: Mudurlukler,
@@ -1002,7 +1043,7 @@ const downloadClients = async (req, res, next) => {
                     [Sequelize.Op.gte]: 0 // Filters for 'durum' greater than or equal to 0
                 },
             },
-            order: [["ip" , "ASC"]]
+            order: [["ip", "ASC"]]
         })
 
         const workbook = new ExcelJS.Workbook();
@@ -1120,7 +1161,7 @@ const uploadExcelForIPS = async (req, res, next) => {
         worksheet.eachRow(async (row, rowNumber) => {
             if (rowNumber > 1) { // Skip the header row
                 let data = {
-                    name: row.getCell(1).value|| "",
+                    name: row.getCell(1).value || "",
                     ip: row.getCell(2).value || "",
                     address: row.getCell(3).value || "",
                     status: 1,
@@ -1156,7 +1197,9 @@ const getAdmins = async (req, res, next) => {
                 username: {
                     [Sequelize.Op.like]: `%${name}%`
                 }
-            }
+            },
+
+            attributes: { exclude: ['password'] }
         })
 
         res.status(200).json(new Response(1, { admins }, "success"));
@@ -1256,7 +1299,7 @@ module.exports = {
     downloadTelefon,
     downloadClients,
     updatePersonel,
-    uploadExcel,uploadExcelForIPS,
+    uploadExcel, uploadExcelForIPS,
 
 
 

@@ -6,6 +6,8 @@ import "./personels.css"
 import { BorderColor, CloudDownload, Delete, NavigateBefore, NavigateNext } from "@mui/icons-material";
 import EditPersonel from "./EditPersonel";
 import CreatePersonel from "./CreatePersonel";
+import { Popconfirm, Radio } from 'antd';
+import { errorToast } from "../../helpers/toast";
 function Personeller() {
 
     const [name, setName] = useState("");
@@ -13,9 +15,16 @@ function Personeller() {
     const [departman, setDepartman] = useState("");
     const [kartno, setKartno] = useState("");
     const [unvan, setUnvan] = useState("");
+    const [cinsiyet, setCinsiyet] = useState("");
+    const [aktif, setAktif] = useState("");
+
+    const [selecteddownload, setselecteddownload] = useState(1);
 
     const handleDownloadClick = () => {
-        window.open(import.meta.env.VITE_APP_API_URL + "/admin/download-personeller", "_blank");
+        if (!selecteddownload) {
+            errorToast("Aktif veya pasif'i seçin")
+        }
+        window.open(import.meta.env.VITE_APP_API_URL + "/admin/download-personeller/" + selecteddownload, "_blank");
     };
 
 
@@ -27,7 +36,7 @@ function Personeller() {
 
     const getPersonels = async () => {
         const personel = await requestWithAuth("post", "/admin/get-personels?page=", page, "", {
-            name: name, departman: departman.toString(), kartno, unvan
+            name: name, departman: departman.toString(), kartno, unvan, cinsiyet, aktiflik: aktif
         })
 
         setPersoneller(personel.data.personels)
@@ -52,12 +61,12 @@ function Personeller() {
 
     useEffect(() => {
         getPersonels()
-    }, [name, page, departman, kartno, unvan]);
+    }, [name, page, departman, kartno, unvan, cinsiyet, aktif]);
 
 
 
     const [selectedPersonel, setSelectedPersonel] = useState(null);
-    
+
 
 
 
@@ -95,12 +104,13 @@ function Personeller() {
         }
     }
 
+    console.log(personeller);
     return (
 
 
 
 
-        <div style={{marginRight: "5rem"}} className="mx-">
+        <div style={{ marginRight: "1rem" }} className="mx-">
             <EditPersonel getPersonels={getPersonels} page={page} open={open2} handleClose={handleClose2} personel={selectedPersonel}></EditPersonel>
             <CreatePersonel getPersonels={getPersonels} page={page} open={open} handleClose={handleClose}></CreatePersonel>
             <div className="d-flex align-items-center mt-3">
@@ -114,6 +124,7 @@ function Personeller() {
                             placeholder="Müdürlük Seçiniz"
                             onChange={(e) => setDepartman(e.target.value)}
                         >
+                            <MenuItem value={""}>Müdürlük Seçiniz</MenuItem>
                             {
                                 mudurlukler?.map((mudurluk) => {
                                     return (<MenuItem value={mudurluk.id} key={mudurluk.id}>{mudurluk.birim}</MenuItem>)
@@ -157,11 +168,60 @@ function Personeller() {
                     value={unvan}
                     onChange={(e) => setUnvan(e.target.value)}
                 />
+                <div style={{width: "10%"}}>
 
-                <div style={{ cursor: "pointer" }} onClick={handleDownloadClick} className="d-flex flex-column align-items-center mx-2">
-                    <CloudDownload sx={{ fontSize: 40 }}></CloudDownload>
-                    <span className="fw-bold">İndir</span>
+                    <FormControl className="w-100">
+                        <InputLabel id="demo-simple-select-label">Cinsiyet</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            label="asd"
+                            placeholder="Cinsiyet"
+                            onChange={(e) => setCinsiyet(e.target.value)}
+                        >
+
+                            <MenuItem value={""}>{"Cinsiyet Seçiniz"}</MenuItem>
+                            <MenuItem value={"0"}>{"Belirtilmemiş"}</MenuItem>
+                            <MenuItem value={"1"}>{"Erkek"}</MenuItem>
+                            <MenuItem value={"-1"}>{"Kadın"}</MenuItem>
+                        </Select>
+                    </FormControl>
                 </div>
+                <div className="mx-1" style={{width: "10%"}}>
+
+                    <FormControl className="w-100">
+                        <InputLabel id="demo-simple-select-label">Aktiflik</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            label="asd"
+                            placeholder="Aktiflik"
+                            onChange={(e) => setAktif(e.target.value)}
+                        >
+
+                            <MenuItem value={"1"}>{"Aktif"}</MenuItem>
+                            <MenuItem value={"-1"}>{"Pasif"}</MenuItem>
+                        </Select>
+                    </FormControl>
+                </div>
+                <Popconfirm
+                    title="Seçilen personelleri indir."
+                    description={
+                        <Radio.Group value={selecteddownload} onChange={(e) => { setselecteddownload(e.target.value) }}>
+                            <Radio value={1}>Aktif Personeller</Radio>
+                            <Radio value={-1}>Pasif Personeller</Radio>
+                        </Radio.Group>}
+                    onConfirm={handleDownloadClick}
+                    onCancel={() => { }}
+                    okText="İndir"
+                    cancelText="Vazgeç"
+                >
+
+                    <div style={{ cursor: "pointer" }} className="d-flex flex-column align-items-center mx-2">
+                        <CloudDownload sx={{ fontSize: 40 }}></CloudDownload>
+                        <span className="fw-bold">İndir</span>
+                    </div>
+                </Popconfirm>
 
                 <div className="mt-2">
 
@@ -170,10 +230,12 @@ function Personeller() {
             </div>
 
             <hr />
+
             <table className="custom-table5">
                 <thead>
                     <tr>
                         <th></th>
+                        <th style={{fontSize: "12px"}}>Toplam: {personeller?.pagination?.total_records}</th>
                         <th>Ad Soyad</th>
                         <th>Bölüm</th>
                         <th>Kart No</th>
@@ -184,10 +246,11 @@ function Personeller() {
                 </thead>
                 <tbody>
                     {
-                        personeller?.result.length > 0 && personeller?.result.map((personel) => {
+                        personeller?.result.length > 0 && personeller?.result.map((personel, index) => {
                             return (
 
-                                <tr onClick={() => {setSelectedPersonel(personel) ; setOpen2(true)}} key={personel.ID}>
+                                <tr onClick={() => { setSelectedPersonel(personel); setOpen2(true) }} key={personel.ID}>
+                                    <td>{(index + 1) + (page * 50) - 50}</td>
                                     <td><img style={{ borderRadius: "150px", height: "120px", width: "100px" }} src={`${import.meta.env.VITE_APP_URL}/kullanici/${personel.Resim}`} alt="" /></td>
 
                                     <td className="">
@@ -198,7 +261,7 @@ function Personeller() {
                                     <td>{personel.KartNo}</td>
                                     <td>{personel?.ogrenim?.Adi}</td>
                                     <td>{personel.TelefonNo}</td>
-                                    <td><Delete onClick={(e) => {e.stopPropagation(); handleDelete(personel.ID)}} style={{ color: "crimson", cursor: "pointer" }}></Delete></td>
+                                    <td><Delete onClick={(e) => { e.stopPropagation(); handleDelete(personel.ID) }} style={{ color: "crimson", cursor: "pointer" }}></Delete></td>
 
 
                                 </tr>

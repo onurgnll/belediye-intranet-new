@@ -4,6 +4,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { Done } from '@mui/icons-material';
 import { requestWithAuth, requestWithAuthForm } from '../../helpers/requests';
 import { errorToast, successToast } from '../../helpers/toast';
+import { DatePicker, Radio } from 'antd';
 
 function EditPersonel({ getPersonels, page, handleClose, open, personel }) {
 
@@ -25,8 +26,12 @@ function EditPersonel({ getPersonels, page, handleClose, open, personel }) {
         OgrenimDurumu: personel?.OgrenimDurumu || '',
         Bolum: personel?.Bolum || '',
         Unvani: personel?.Unvani || '',
+        AltBolum1: personel?.AltBolum1 || '',
+        AltBolum2: personel?.AltBolum2 || '',
+        Cinsiyeti: personel?.Cinsiyeti == null ? "0" : String(personel?.Cinsiyeti),
     });
 
+    console.log(formData);
     const [selectedImage, setSelectedImage] = useState(`${import.meta.env.VITE_APP_URL}/kullanici/${personel?.Resim}`);
 
     const [selectedImage2, setSelectedImage2] = useState();
@@ -45,7 +50,10 @@ function EditPersonel({ getPersonels, page, handleClose, open, personel }) {
             DogumTarihiYil: personel?.DogumTarihi ? personel.DogumTarihi.slice(0, 4) : '',
             OgrenimDurumu: personel?.OgrenimDurumu || '',
             Bolum: personel?.Bolum || '',
+            AltBolum1: personel?.AltBolum1 || '',
             Unvani: personel?.Unvani || '',
+            AltBolum2: personel?.AltBolum2 || '',
+            Cinsiyeti: personel?.Cinsiyeti == null ? "0" : String(personel?.Cinsiyeti),
         });
         setSelectedImage(`${import.meta.env.VITE_APP_URL}/kullanici/${personel?.Resim}`);
     }, [personel]);
@@ -60,6 +68,7 @@ function EditPersonel({ getPersonels, page, handleClose, open, personel }) {
     }, []);
 
     const handleChange = (e) => {
+        console.log(e);
         const { name, value } = e.target;
         setFormData(prevState => ({
             ...prevState,
@@ -82,12 +91,14 @@ function EditPersonel({ getPersonels, page, handleClose, open, personel }) {
     const handleImageClick = () => {
         document.getElementById('imageUpload').click();
     };
-
+    const onChange = (date, dateString) => {
+        console.log(date, dateString);
+      };
 
     const handleSubmit = async () => {
         // Handle form submission
         const form = new FormData();
-        Object.keys(formData).forEach(key => { if (formData[key] != "") form.append(key, formData[key]) });
+        Object.keys(formData).forEach(key => {  form.append(key, formData[key]) });
 
 
         if (selectedImage2) {
@@ -186,6 +197,12 @@ function EditPersonel({ getPersonels, page, handleClose, open, personel }) {
                         value={formData.Adresi}
                         onChange={handleChange}
                     />
+                    <Radio.Group name='Cinsiyeti' value={formData.Cinsiyeti} onChange={handleChange}>
+                        <Radio value={"1"}>Erkek</Radio>
+                        <Radio value={"-1"}>Kadın</Radio>
+                        <Radio value={"0"}>Belirtilmemiş</Radio>
+                    </Radio.Group>
+
                     <h6 className='my-2'>Doğum Tarihi</h6>
                     <div className='d-flex'>
                         <TextField
@@ -226,6 +243,14 @@ function EditPersonel({ getPersonels, page, handleClose, open, personel }) {
                             ))}
                         </Select>
                     </FormControl>
+                    <TextField
+                        className='my-2'
+                        fullWidth
+                        label="Okulu/Bölümü"
+                        name="AltBolum1"
+                        value={formData.AltBolum1}
+                        onChange={handleChange}
+                    />
                 </div>
                 <div className='d-flex flex-column align-items-center mt-3 w-100'>
                     <h3>Kurum Bilgileri</h3>
@@ -250,6 +275,7 @@ function EditPersonel({ getPersonels, page, handleClose, open, personel }) {
                         value={formData.Unvani}
                         onChange={handleChange}
                     />
+                    <input className='w-100 p-3' name='AltBolum2' onChange={handleChange} value={formData.AltBolum2.split("T")[0]} type="date" />
                 </div>
                 <Button
                     type="submit"

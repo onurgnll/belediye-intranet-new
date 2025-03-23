@@ -5,8 +5,9 @@ import { Done } from '@mui/icons-material';
 import { requestWithAuth, requestWithAuthForm } from '../../helpers/requests';
 import defaultphoto from "../../assets/avradfaez.png"
 import { errorToast, successToast } from '../../helpers/toast';
+import { DatePicker, Radio } from 'antd';
 
-function CreatePersonel({ getPersonels, page,handleClose, open }) {
+function CreatePersonel({ getPersonels, page, handleClose, open }) {
 
     const ogrenimler = ["İlkokul", "Ortaokul", "Lise", "Önlisans", "Lisans", "Yüksek Lisans", "Doktora", "Okur Yazar", "Cahil", "İlk Öğretim"];
 
@@ -25,6 +26,9 @@ function CreatePersonel({ getPersonels, page,handleClose, open }) {
         OgrenimDurumu: '',
         Bolum: '',
         Unvani: '',
+        AltBolum1: '',
+        AltBolum2: '',
+        Cinsiyeti: "0",
     });
 
     const [selectedImage, setSelectedImage] = useState(null);
@@ -66,12 +70,12 @@ function CreatePersonel({ getPersonels, page,handleClose, open }) {
     const handleSubmit = async () => {
         if (!validateForm()) return;
         const form = new FormData();
-        Object.keys(formData).forEach(key => {if(formData[key] != "") form.append(key, formData[key])});
+        Object.keys(formData).forEach(key => { if (formData[key] != "") form.append(key, formData[key]) });
         if (selectedImage2) {
             form.append("image", selectedImage2);
         }
 
-        const res = await requestWithAuthForm("post", "/admin/create-personel","","" ,  form);
+        const res = await requestWithAuthForm("post", "/admin/create-personel", "", "", form);
         handleClose();
         getPersonels(page)
         if (res.success > 0)
@@ -181,6 +185,12 @@ function CreatePersonel({ getPersonels, page,handleClose, open }) {
                         value={formData.Adresi}
                         onChange={handleChange}
                     />
+
+                    <Radio.Group name='Cinsiyeti' value={formData.Cinsiyeti} onChange={handleChange}>
+                        <Radio value={"1"}>Erkek</Radio>
+                        <Radio value={"-1"}>Kadın</Radio>
+                        <Radio value={"0"}>Belirtilmemiş</Radio>
+                    </Radio.Group>
                     <h6 className='my-2'>Doğum Tarihi</h6>
                     <div className='d-flex'>
                         <TextField
@@ -225,6 +235,15 @@ function CreatePersonel({ getPersonels, page,handleClose, open }) {
                             ))}
                         </Select>
                     </FormControl>
+
+                    <TextField
+                        className='my-2'
+                        fullWidth
+                        label="Okulu/Bölümü"
+                        name="AltBolum1"
+                        value={formData.AltBolum1}
+                        onChange={handleChange}
+                    />
                 </div>
                 <div className='d-flex flex-column align-items-center mt-3 w-100'>
                     <h3>Kurum Bilgileri</h3>
@@ -249,6 +268,7 @@ function CreatePersonel({ getPersonels, page,handleClose, open }) {
                         value={formData.Unvani}
                         onChange={handleChange}
                     />
+                    <input className='w-100 p-3' name='AltBolum2' onChange={handleChange} value={formData.AltBolum2.split("T")[0]} type="date" />
                 </div>
                 <Button
                     type="submit"

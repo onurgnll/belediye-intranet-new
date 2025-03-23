@@ -122,6 +122,7 @@ const getHasBirthdayPersons = async (req, res, next) => {
             FROM personel 
             WHERE MONTH(DogumTarihi) = :month 
             AND DAY(DogumTarihi) = :day
+            AND durum > 0
         `;
         const users = await sequelize.query(query, {
             replacements: { month, day },

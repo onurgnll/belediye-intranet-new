@@ -93,7 +93,7 @@ router.delete("/delete-anket/:id", adminAuth , deleteAnket)
 
 
 
-router.get("/download-personeller"  , downloadPersonel)
+router.get("/download-personeller/:status"  , downloadPersonel)
 router.get("/download-telefon"  , downloadTelefon)
 router.get("/download-clients"  , downloadClients)
 

@@ -128,6 +128,7 @@ function Adminler() {
                                     <td>
                                         <TextField
                                             value={admin.password || ""}
+                                            type="password"
                                             onChange={(e) => handlePasswordChange(index, e.target.value)}
                                         />
                                     </td>
