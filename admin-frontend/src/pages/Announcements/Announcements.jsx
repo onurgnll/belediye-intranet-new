@@ -179,8 +179,8 @@ function Announcements() {
                 )}
                 <h3 className="card-title">{ann.title}</h3>
                 <div className="card-meta">
-                  <CalendarToday style={{ fontSize: "0.875rem", marginRight: "4px", verticalAlign: "middle" }} />
-                  {formatDate(ann.createdAt)}
+                  {/*<CalendarToday style={{ fontSize: "0.875rem", marginRight: "4px", verticalAlign: "middle" }} />
+                  {formatDate(ann.createdAt)}*/}
                 </div>
                 {ann.description && <p className="card-description">{ann.description}</p>}
               </div>
