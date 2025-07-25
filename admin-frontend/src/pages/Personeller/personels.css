@@ -1,80 +1,140 @@
-.table-container {
-    width: 100%;
-    margin: auto;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-.custom-table5 {
-    width: 100%;
-    border-collapse: collapse;
-    
-}
-.custom-table5 th {
-    border: 1px solid #ddd;
-    padding: 6px;
+/* Personel stilleri için App.css'deki global stiller kullanılmaktadır. */
+.personel-header,
+.personel-filters {
+  background-color: var(--surface-color);
+  padding: 24px;
+  border-radius: var(--border-radius);
+  margin-bottom: 24px;
+  border: 1px solid var(--border-color);
 }
 
-.custom-table5 td {
-    /* border: 1px solid #ddd; */
-    padding: 4px;
-}
-.custom-table5 th {
-    background-color: #f4f4f4;
-}
-.custom-table5 img {
-    max-width: 200px; /* Resim boyutunu sınırlandırmak için */
-    border-radius: 4px;
-}
-.custom-table5 tbody tr:nth-child(even) {
-    background-color: #f4f4f4;
-}
-.custom-table5 tbody tr:hover {
-    color: white;
-    cursor: pointer;
-    background-color: #c6c6c6;
+.personel-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
 }
 
-.olusturbutton{
-    border: none;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    color: white;
-    font-weight: bold;
-    background-color: rgb(42, 42, 91);
-    padding: 5px;
-    border-radius: 10px;
+.personel-subtitle {
+  color: var(--text-secondary);
+  margin-top: 4px;
 }
 
-
-.pagination {
-    display: flex;
-    list-style: none;
-    padding: 0;
-    margin: 0;
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
 }
 
-.page-item {
-    margin: 0 4px;
+.metric-card-small {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-.page-link {
-    padding: 4px 8px;
-    cursor: pointer;
-    background-color: #F9C417;
-    text-decoration: none;
-    color: white;
-    font-weight: bold;
-    border: none;
-    border-radius: 5px;
-
+.metric-icon-small {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--primary-light);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.page-link:hover {
-    color: white;
-    background-color: #b29023;
+.metric-value-small {
+  font-size: 20px;
+  font-weight: 700;
 }
 
-.active .page-link {
-    background-color: #94781e;
-    color: white;
+.metric-label-small {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.header-actions {
+  display: flex;
+  gap: 16px;
+}
+
+.secondary-button {
+  background-color: transparent;
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+  padding: 8px 16px;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.secondary-button:hover {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.filter-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.filter-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.table-row-hover {
+  cursor: pointer;
+}
+
+.personel-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.personel-name {
+  font-weight: 500;
+}
+
+.personel-title2 {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.department-badge {
+  background-color: #e9ecef;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.card-number {
+  font-family: monospace;
+}
+
+.education-level {
+  font-size: 14px;
+}
+
+.phone-number {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+}
+
+.delete-button {
+  color: var(--error-color);
+  cursor: pointer;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 48px;
+  color: var(--text-secondary);
 }

@@ -1,21 +1,268 @@
-.eachanket {
-    cursor: pointer;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
+/* Anket Yönetimi Sayfası stilleri için App.css'deki global stiller kullanılmaktadır. */
+.anket-container {
+  animation: fadeIn 0.5s ease-in-out;
 }
 
-.eachanket:hover {
-    cursor: pointer;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.aaaff {
-
-    box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
-    border-radius: 15px;
-    cursor: pointer
+.anket-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px;
+  background-color: var(--surface-color);
+  border-radius: var(--border-radius);
+  margin-bottom: 24px;
+  border: 1px solid var(--border-color);
 }
 
-.aaaff:hover {
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+.anket-title-section .anket-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.anket-title-section .anket-subtitle {
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.anket-stats {
+  display: flex;
+  gap: 16px;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: #f8f9fa;
+  padding: 12px 16px;
+  border-radius: var(--border-radius);
+}
+
+.stat-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.stat-icon.main {
+  background-color: var(--accent-color);
+}
+.stat-icon.secondary {
+  background-color: var(--primary-color);
+}
+
+.stat-value {
+  font-size: 20px;
+  font-weight: 700;
+}
+.stat-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.anket-section {
+  margin-bottom: 32px;
+}
+
+.section-header {
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-badge {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 12px;
+  background-color: #e9ecef;
+  color: var(--text-secondary);
+}
+
+.section-badge.important {
+  background-color: var(--accent-color);
+  color: white;
+}
+
+.anket-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.anket-card {
+  background-color: var(--surface-color);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.anket-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+}
+
+.anket-card.featured {
+  border-left: 4px solid var(--accent-color);
+}
+
+.anket-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  background-color: #f8f9fa;
+}
+
+.anket-status {
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-secondary);
+}
+
+.anket-status.important {
+  color: var(--accent-color);
+}
+
+.delete-anket-button {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+}
+
+.delete-anket-button:hover {
+  background-color: #e9ecef;
+  color: var(--error-color);
+}
+
+.anket-card-content {
+  padding: 16px;
+}
+
+.anket-card-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.anket-card-description {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.anket-card-footer {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border-color);
+  text-align: right;
+}
+
+.anket-card-action {
+  color: var(--primary-color);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 48px;
+  background-color: var(--surface-color);
+  border: 2px dashed var(--border-color);
+  border-radius: var(--border-radius);
+}
+
+.empty-state-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.empty-state-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.empty-state-description {
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+
+.anket-card.skeleton {
+  cursor: default;
+}
+.anket-card.skeleton:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.participant-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background-color: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.participant-card:hover {
+  border-color: var(--primary-color);
+  box-shadow: var(--shadow-sm);
+}
+
+.participant-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--primary-light);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.participant-name {
+  font-weight: 500;
+}
+
+.no-participants {
+  text-align: center;
+  padding: 32px;
+  color: var(--text-secondary);
 }

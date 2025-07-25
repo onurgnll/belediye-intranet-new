@@ -1,61 +1,68 @@
-.table-container {
-    width: 100%;
-    margin: auto;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-.custom-table1 {
-    width: 100%;
-    border-collapse: collapse;
-}
-.custom-table1 th {
-    border: 1px solid #ddd;
-    padding: 6px;
+/* Telefon Yönetimi Sayfası stilleri için App.css'deki global stiller kullanılmaktadır. */
+.telephone-filters {
+  background-color: var(--surface-color);
+  padding: 16px;
+  border-radius: var(--border-radius);
+  margin-bottom: 24px;
+  border: 1px solid var(--border-color);
 }
 
-.custom-table1 td {
-    /* border: 1px solid #ddd; */
-    padding: 4px;
-}
-.custom-table1 th {
-    background-color: #f4f4f4;
-}
-.custom-table1 img {
-    max-width: 200px; /* Resim boyutunu sınırlandırmak için */
-    border-radius: 4px;
-}
-.custom-table1 tbody tr:nth-child(even) {
-    background-color: #f4f4f4;
-}
-.custom-table1 tbody tr:hover {
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    background-color: #aeaeae;
+.telephone-actions {
+  display: flex;
+  gap: 16px;
+  align-items: center;
 }
 
-.olusturbutton{
-    border: none;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    color: white;
-    font-weight: bold;
-    background-color: rgb(42, 42, 91);
-    padding: 5px;
-    border-radius: 10px;
+.download-area,
+.upload-area {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border: 1px solid var(--border-color);
 }
 
+.download-area:hover,
+.upload-area:hover {
+  background-color: #f8f9fa;
+}
 
 .upload-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 3px 5px;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 15px;
+  background-color: var(--success-color);
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: var(--border-radius);
+  cursor: pointer;
 }
 
-.upload-button:hover {
-    background-color: #0056b3;
+.phone-row {
+  cursor: pointer;
+}
+
+.phone-name {
+  font-weight: 500;
+}
+
+.department-tag {
+  background-color: #e9ecef;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.phone-number-display {
+  font-family: monospace;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.delete-phone-button {
+  color: var(--error-color);
+  cursor: pointer;
 }
