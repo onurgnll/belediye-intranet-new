@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import "./App.css"
-import logo from "./assets/200180283.png"
+import logo from "./assets/200180283_darkmode.png"
 import { AssignmentInd, Campaign, Lan, Logout, Person, Phone, Poll, Dashboard, AccessTime } from "@mui/icons-material"
 import { Link, Route, Routes, useNavigate, useLocation } from "react-router-dom"
 import Announcements from "./pages/Announcements/Announcements"
