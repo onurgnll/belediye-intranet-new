@@ -1,46 +1,75 @@
-const JWT = require('jsonwebtoken');
-const { User, Admin } = require('../models');
+const JWT = require("jsonwebtoken");
+const { User, Admin, Mudur } = require("../models");
 
 const adminAuth = async (req, res, next) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
 
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
+  if (token == null) {
+    return res.status(401).json({
+      success: -1,
+      data: [],
+      message: "Tekrar giriş yapınız",
+    });
+  }
 
-    if (token == null) {
+  const currentUser = await Admin.findOne({ where: { accessToken: token } });
+
+  if (currentUser) {
+    JWT.verify(token, process.env.ACCESS_TOKEN_SECRET_KEY, (err, user) => {
+      if (err) {
         return res.status(401).json({
-            success: -1,
-            data: [],
-            message: "Tekrar giriş yapınız"
-        }) 
-    }
-
-    const currentUser = await Admin.findOne({where: {accessToken: token}});
-
-    if(currentUser) {
-        JWT.verify(token, process.env.ACCESS_TOKEN_SECRET_KEY, (err, user) => {
-
-            if (err) {
-                return res.status(401).json({
-                    success: -1,
-                    data: [],
-                    message: "Tekrar giriş yapınız"
-                })
-            }
-
-            req.admin = user;
-            next();
-
+          success: -1,
+          data: [],
+          message: "Tekrar giriş yapınız",
         });
+      }
 
-    }
-    else {
+      req.admin = user;
+      next();
+    });
+  } else {
+    return res.status(401).json({
+      success: -1,
+      data: [],
+      message: "Tekrar giriş yapınız",
+    });
+  }
+};
+
+const mudurAuth = async (req, res, next) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+
+  if (token == null) {
+    return res.status(401).json({
+      success: -1,
+      data: [],
+      message: "Tekrar giriş yapınız",
+    });
+  }
+
+  const currentUser = await Mudur.findOne({ where: { accessToken: token } });
+
+  if (currentUser) {
+    JWT.verify(token, process.env.ACCESS_TOKEN_SECRET_KEY, (err, user) => {
+      if (err) {
         return res.status(401).json({
-            success: -1,
-            data: [],
-            message: "Tekrar giriş yapınız"
-        }) 
-    }
+          success: -1,
+          data: [],
+          message: "Tekrar giriş yapınız",
+        });
+      }
 
-}
-
-module.exports = adminAuth;
+      req.mudur = user;
+      next();
+    });
+  } else {
+    return res.status(401).json({
+      success: -1,
+      data: [],
+      message: "Tekrar giriş yapınız",
+    });
+  }
+};
+module.exports = { mudurAuth, adminAuth };

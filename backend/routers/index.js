@@ -3,6 +3,7 @@ const router = express.Router();
 
 const adminRouter = require("./admin");
 const userRouter = require("./user");
+const mudurRouter = require("./mudur");
 
 router.get("/", (req, res) => {
     res.send("api");
@@ -10,5 +11,6 @@ router.get("/", (req, res) => {
 
 router.use("/admin", adminRouter);
 router.use("/user", userRouter);
+router.use("/mudur", mudurRouter);
 
 module.exports = router;
